@@ -21,18 +21,20 @@ create table dyzur(dyzur_id SERIAL primary key,
 create table pracownik_dyzur(dyzur_id INT references dyzur(dyzur_id) ,
 							 pracownik_id INT references pracownik(pracownik_id),
 							 constraint pracownik_dyzur_pk primary key(dyzur_id, pracownik_id) );
-							 
-create table lekarz(lekarz_id INT primary key references pracownik(pracownik_id), 
-					specjalizacja text not null, 
-					oddzial_id INT not null);
+			
+-- oddzial moze byc chwilowo nieprzypisany
+create table lekarz(lekarz_id INT primary key references pracownik(pracownik_id),  
+					oddzial_id INT);
 					
 create table pielegniarz(pielegniarz_id INT primary key references pracownik(pracownik_id),
-						oddzial_id INT not null);
+						oddzial_id INT);
+				
+					
 					
 create table oddzial(oddzial_id SERIAL primary key, 
 					nazwa text not null,
 					nr_budynku INT not null,
-					odrynator INT references lekarz(lekarz_id),
+					ordynator INT references lekarz(lekarz_id),
 					oddzialowy INT references pielegniarz(pielegniarz_id));
 				
 alter table lekarz add foreign key 
@@ -67,6 +69,7 @@ create table pacjent(pacjent_id SERIAL primary key,
 alter table wizyta add foreign key
 (pacjent_id) references pacjent(pacjent_id) 
 on delete set NULL;
+
 
 
 
