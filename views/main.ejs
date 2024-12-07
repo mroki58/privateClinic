@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Prywatna Klinika</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Prywatna klinika</h1>
+    </header>
+
+    <nav>
+        <h3>Nawigacja</h3>
+        <a href="/oddzial">Nasze oddzialy</a> <br />
+        <a>Zostan pacjentem</a> <br />
+    </nav>
+
+    <main>
+        <article>
+            <table>
+                <% if (msg === 'ok' ) { %>
+                    <% rows.forEach(row=> { %>
+                        <tr>
+                        <% for (let key in row) { %>
+                                <td>
+                                    <bold><%= key %></bold>
+                                </td>
+                                <td>
+                                    <%= row[key] %>
+                                </td>
+                            
+                            <% } %>
+                        </tr> <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="2">Nie udało się wyświetlić zawartości</td>
+                                        </tr>
+                                        <% } %>
+            </table>
+        </article>
+    </main>
+
+    <footer>
+        Autor: Igor Sala
+    </footer>
+
+</body>
+
+</html>

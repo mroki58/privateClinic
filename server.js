@@ -1,8 +1,7 @@
 const express = require('express')
 const { Pool } = require('pg');
-const path = require('path')
 require('dotenv').config()
-
+const ejs = require('ejs')
 
 const app = express()
 
@@ -23,14 +22,17 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000, // Czas oczekiwania na nowe połączenie
 });
 
-app.get('/api/oddzial', async (req, res) => {
+app.get('/oddzial', async (req, res) => {
 
     try{
-        const result = await client.query('SELECT * FROM proj.oddzial')
-        res.send(result.rows);
+        const result = await pool.query('SELECT * FROM proj.oddzial')
+        console.log(result)
+        let rows = result.rows
+        res.render('main', {rows: rows, msg: "ok"});
     }catch(err)
     {
-        res.send(JSON.stringify({"msg": "nie udalo sie pobrac rekordow"}))
+        console.log(err);
+        res.render('main', {msg : "err"})
     }
 })
 
