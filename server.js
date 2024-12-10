@@ -25,9 +25,20 @@ const pool = new Pool({
 app.get('/oddzial', async (req, res) => {
 
     try{
-        const result = await pool.query('SELECT * FROM proj.oddzial')
+        const result = await pool.query(`
+                SELECT 
+                    o.nazwa, 
+                    o.nr_budynku, 
+                    CONCAT(p1.imie, ' ', p1.nazwisko) as ordynator,  
+                    CONCAT(p2.imie, ' ', p2.nazwisko) as oddziałowy 
+                FROM proj.oddzial o 
+                JOIN proj.pracownik p1 ON p1.pracownik_id = o.ordynator 
+                JOIN proj.pracownik p2 ON p2.pracownik_id = o.oddzialowy
+                `);
+
         console.log(result)
         let rows = result.rows
+        console.log(rows);
         res.render('main', {rows: rows, msg: "ok"});
     }catch(err)
     {

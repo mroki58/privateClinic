@@ -4,47 +4,53 @@
 <head>
     <title>Prywatna Klinika</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/styles/style.css" />
     <script src="script.js"></script>
 </head>
 
 <body>
-    <header>
+    <header class="pageHeader">
         <h1>Prywatna klinika</h1>
     </header>
 
-    <nav>
+    <nav class="pageNav">
         <h3>Nawigacja</h3>
-        <a href="/oddzial">Nasze oddzialy</a> <br />
-        <a>Zostan pacjentem</a> <br />
+        <a href="/oddzial">Nasze oddziały</a> <br />
+        <a>Zostań pacjentem</a> <br />
     </nav>
 
-    <main>
+    <main class="pageMain">
         <article>
             <table>
-                <% if (msg === 'ok' ) { %>
+                <% if (msg==='ok' ) { %>
                     <% rows.forEach(row=> { %>
                         <tr>
-                        <% for (let key in row) { %>
+                            <% for (let key in row) { %>
                                 <td>
-                                    <bold><%= key %></bold>
+                                    <bold>
+                                        <%= key %>
+                                    </bold>
                                 </td>
                                 <td>
                                     <%= row[key] %>
                                 </td>
-                            
-                            <% } %>
-                        </tr> <% }) %>
-                                    <% } else { %>
-                                        <tr>
-                                            <td colspan="2">Nie udało się wyświetlić zawartości</td>
-                                        </tr>
-                                        <% } %>
+                                <% } %>
+                        </tr>
+                        <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2">Nie udało się wyświetlić zawartości</td>
+                                </tr>
+                                <% } %>
             </table>
         </article>
     </main>
 
-    <footer>
+    <aside class="pageAside">
+        <!-- Dodatkowa treść -->
+    </aside>
+
+    <footer class="pageFooter">
         Autor: Igor Sala
     </footer>
 

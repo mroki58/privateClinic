@@ -1,0 +1,100 @@
+*{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+body {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "nav main aside"
+        "footer footer footer";
+    grid-template-rows: 80px 1fr 70px;
+    grid-template-columns: 10% 1fr 5%;
+    margin: 0;
+    height: 100vh;
+}
+
+* {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "nav main aside"
+        "footer footer footer";
+    grid-template-rows: 80px 1fr 70px;
+    grid-template-columns: 15% 1fr 15%;
+    margin: 0;
+    height: 100vh;
+    background-color: #f3f3f3;
+    /* Jasne tło strony */
+}
+
+.pageHeader {
+    grid-area: header;
+    background-color: #1DB954;
+    /* Kolor zielony charakterystyczny dla Spotify */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.pageFooter {
+    grid-area: footer;
+    background-color: #121212;
+    /* Bardzo ciemny, niemal czarny, stylowy kolor */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.pageMain {
+    grid-area: main;
+    background-color: #ffffff;
+    /* Białe tło dla głównej treści */
+    color: #333333;
+    /* Ciemnoszary tekst */
+    padding: 20px;
+}
+
+.pageNav {
+    grid-area: nav;
+    background-color: #f1f1f1;
+    /* Bardzo jasny szary */
+    padding: 20px;
+}
+
+.pageAside {
+    grid-area: aside;
+    background-color: #eeeeee;
+    /* Jasnoszary, neutralny odcień */
+    padding: 20px;
+}
+
+/* Przejście koloru w elementach */
+.pageHeader:hover {
+    background-color: #1ED760;
+    /* Jasniejszy odcień zielonego po najechaniu */
+}
+
+.pageFooter:hover {
+    background-color: #1a1a1a;
+    /* Mniej intensywny odcień ciemnego tła */
+}
+
+.pageNav:hover {
+    background-color: #e0e0e0;
+    /* Przejście do jaśniejszego szaro-beżowego */
+}
+
+.pageAside:hover {
+    background-color: #dddddd;
+    /* Delikatna zmiana na jaśniejszy odcień */
+}
