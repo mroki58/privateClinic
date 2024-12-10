@@ -17,9 +17,10 @@ create table pracownik(pracownik_id SERIAL primary KEY, imie text not null, nazw
 create table dyzur(dyzur_id SERIAL primary key, 
 					data DATE not null, 
 					zmiana VARCHAR(1));
-
-create table pracownik_dyzur(dyzur_id INT references dyzur(dyzur_id) ,
-							 pracownik_id INT references pracownik(pracownik_id),
+				
+-- tablica z której potencjalnie coś chcemy usuwać w przypadku usunięcia dyżuru
+create table pracownik_dyzur(dyzur_id INT references dyzur(dyzur_id) on delete cascade ,
+							 pracownik_id INT references pracownik(pracownik_id) on delete cascade,
 							 constraint pracownik_dyzur_pk primary key(dyzur_id, pracownik_id) );
 			
 -- oddzial moze byc chwilowo nieprzypisany
@@ -54,7 +55,7 @@ create table wizyta(wizyta_id SERIAL primary key,
 					data DATE not null,
 					godzina TIME not null,
 					rodzaj_wizyty_id INT references rodzaj_wizyty(rodzaj_wizyty_id),
-					lekarz_id INT references lekarz(lekarz_id));
+					lekarz_id INT references lekarz(lekarz_id) on delete set null);
 				
 create table pacjent(pacjent_id SERIAL primary key,
 					imie text not null,

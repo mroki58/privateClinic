@@ -44,3 +44,23 @@ select * from dyzur;
 select * from pracownik_dyzur;
 insert into pracownik_dyzur_insert(data, zmiana, pracownik_id) values ('17-01-2022', 'R', 4); --ma nie zadzialac
 insert into pracownik_dyzur_insert(data, zmiana, pracownik_id) values ('19-01-2022', 'D', 4); 
+
+
+
+-- usuniecie elementu z tabeli - skutkuje tez usunieciem z pracownik_dyzur poprzez CASCADE
+delete from dyzur d
+		where data = '17-01-2022' and dyzur_id = 
+		(select pd.dyzur_id 
+			from pracownik_dyzur pd 
+		where pd.dyzur_id = d.dyzur_id and pd.pracownik_id = 4); 
+
+-- testy
+select * from dyzur;
+select * from pracownik_dyzur;
+
+
+
+
+
+
+
