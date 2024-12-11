@@ -16,7 +16,8 @@ create table pracownik(pracownik_id SERIAL primary KEY, imie text not null, nazw
 -- dlatego bedziemy je usuwac z czasem (po tygodniu albo cos)
 create table dyzur(dyzur_id SERIAL primary key, 
 					data DATE not null, 
-					zmiana VARCHAR(1));
+					zmiana VARCHAR(1),
+					unique(data, zmiana));
 				
 -- tablica z której potencjalnie coś chcemy usuwać w przypadku usunięcia dyżuru
 create table pracownik_dyzur(dyzur_id INT references dyzur(dyzur_id) on delete cascade ,
@@ -54,7 +55,7 @@ create table wizyta(wizyta_id SERIAL primary key,
 					pacjent_id INT not null,
 					data DATE not null,
 					godzina TIME not null,
-					rodzaj_wizyty_id INT references rodzaj_wizyty(rodzaj_wizyty_id),
+					rodzaj_wizyty_id INT references rodzaj_wizyty(rodzaj_wizyty_id) on delete set null,
 					lekarz_id INT references lekarz(lekarz_id) on delete set null);
 				
 create table pacjent(pacjent_id SERIAL primary key,

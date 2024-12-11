@@ -43,15 +43,67 @@ insert into pacjent(imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokal
 ('Sylwia', 'Marek', '88070627025', 'Kraków', 'Kazimierza', 4, 8, '654654123');
 
 select * from pacjent;
-
--- dodawanie do wizyta
-
 select * from rodzaj_wizyty;
 
+-- dopisuje doktora do spotkania
+-- sprawdza czy spotkanie mozna wogole stworzyc
+-- zakladamy, ze musi byc juz ustalony grafik
+-- musimy tez sprawdzic czy data, czas oraz lekarz już nie są zajęte 
+-- zakladamy, ze czas dla zmiany rannej 7:00 - 15:00 a dla zmiany popoludniowej(dziennej) 15:00 - 23:00
+create or replace function sprawdz_czy_ma_dyzur()
+returns trigger as $$
+BEGIN
+	SELECT l.lekarz_id INTO NEW.lekarz_id
+    			FROM lekarz l
+		    WHERE oddzial_id = ( -- oddzial zgadza sie z rodzajem wizyty
+		        SELECT oddzial_id
+		        	FROM rodzaj_wizyty
+		        WHERE rodzaj_wizyty_id = NEW.rodzaj_wizyty_id
+		    )
+		    AND l.lekarz_id NOT IN ( -- lekarz nie ma wizyty o tej godzinie
+		        SELECT lekarz_id
+		        FROM wizyta
+		        WHERE data = NEW.data
+		          AND godzina = NEW.godzina
+		    )
+		    AND EXISTS( -- czy lekarz wogole ma dyzur tego dnia i czy jest na odpowiedniej zmianie
+		        SELECT 1
+		        FROM dyzur d JOIN pracownik_dyzur pd USING(dyzur_id)
+		        WHERE pracownik_id = l.lekarz_id
+		          AND d.data = NEW.data
+				  AND (CASE WHEN d.zmiana = 'D' AND NEW.godzina >= '15:00' THEN true
+							 WHEN d.zmiana = 'R' AND NEW.godzina < '15:00' THEN true
+							 ELSE false END)
+		    )
+		    LIMIT 1;
 
-insert INTO(wizyta_id SERIAL,
-					pacjent_id,
-					data,
-					godzina,
-					rodzaj_wizyty_id,
-					lekarz_id)
+	-- jesli nie mozna dodac zadnego lekarza do wizyty to zglaszamy wyjatek
+    IF NEW.lekarz_id IS NULL THEN
+        RAISE EXCEPTION 'Brak dostępnego lekarza dla podanego rodzaju wizyty';
+		RETURN NULL;
+    END IF;
+
+	RETURN NEW;
+END;
+$$ language plpgsql;
+
+
+CREATE TRIGGER sprawdz_przed_wizyta 
+BEFORE INSERT ON wizyta FOR EACH ROW
+EXECUTE FUNCTION sprawdz_czy_ma_dyzur();
+
+
+-- sprawdzenie dodania wizyty -- dziala
+insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '13:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), null );
+select * from wizyta;
+delete from wizyta;
+-- insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '15:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), null ); -- nie powinno zadzialac bo lekarz nie pracuje na te zmiane
+
+
+-- usuniecie  z dyzuru ma powodować usuniecie istniejacych wizyt (pojencjalnie nie chcemy tego robic, ale w przypadku gdy np. nie mozna wprowadzic zastepstwa to akceptujemy usuniecie wizyty)
+
+select * from dyzur;
+select * from pracownik_dyzur;
+select * from wizyta;
+
+

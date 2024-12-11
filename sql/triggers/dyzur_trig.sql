@@ -3,14 +3,6 @@
 -- Będzie też można usunąć kogoś z tabeli
 set search_path to proj;
 
-select * from dyzur;
-
-insert into dyzur(data, zmiana) values ('20-01-2025', 'R');
-insert into dyzur(data, zmiana) values ('20-01-2025', 'D');
-
-insert into pracownik_dyzur values (1,2), (1,4);
-select * from dyzur join pracownik_dyzur using(dyzur_id);
-
 -- wybieramy dyzur na ktorym chcemy zmienic pracownika
 -- musimy sprawdzic czy pracownicy sa z tego samego oddzialu w innym przypadku mamy wyjatek
 -- musimy sprawdzic czy typ pracownika sie zgadza
@@ -18,7 +10,7 @@ create or REPLACE FUNCTION zmiana_pracownika()
 returns trigger as $$
 DECLARE
 	_oddzial_zmiennika INT; 
-	_data date;
+	_data DATE;
 BEGIN
 
 	-- jezeli ktos jest lekarzem - zamienimy go tylko na lekarza
@@ -54,7 +46,7 @@ BEGIN
 	
 
 	IF EXISTS (SELECT lekarz_id from lekarz WHERE lekarz_id = OLD.pracownik_id) THEN -- jezeli zmiana dotyczy lekarza musimy zmienic lekarza w wizytach
-		SELECT INTO _data data FROM dyzur WHERE dyzur_id = OLD.dyzur_id;
+		SELECT INTO _data data FROM dyzur WHERE dyzur_id = OLD.dyzur_id ;
 		UPDATE wizyta SET lekarz_id = NEW.pracownik_id WHERE lekarz_id = OLD.pracownik_id AND data = _data;
 	END IF; 
 	RETURN NEW;
@@ -66,12 +58,6 @@ create trigger zmiana_pracownika after update
 on pracownik_dyzur for each row
 execute procedure zmiana_pracownika();
 
-update pracownik_dyzur set pracownik_id = 2 where dyzur_id = 1 and pracownik_id = 7; 
--- update pracownik_dyzur set pracownik_id = 5 where dyzur_id = 1 and pracownik_id = 2; nie powiodlo sie
-
-
-select * from dyzur;
-select * from pracownik_dyzur;
 
 
 -- usuniecie wizyty jesli została już dodana jesli usuniemy pracownika z dyzuru
@@ -93,11 +79,3 @@ $$ language plpgsql;
 CREATE TRIGGER usuniecie_wizyty 
 BEFORE DELETE ON pracownik_dyzur FOR EACH ROW
 EXECUTE FUNCTION usun_wizyty();
-
-
-
-
-
-
-
-

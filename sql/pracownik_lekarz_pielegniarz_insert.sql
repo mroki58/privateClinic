@@ -135,6 +135,11 @@ update oddzial set oddzialowy = (select pielegniarz_id from pielegniarz where od
 update oddzial set oddzialowy = (select pielegniarz_id from pielegniarz where oddzial_id = 2) where oddzial_id = 2;
 update oddzial set oddzialowy = (select pielegniarz_id from pielegniarz where oddzial_id = 3) where oddzial_id = 3;
 
+insert into lekarz_insert_widok (imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu, oddzial_id) values
+('Tomasz', 'Jakubiak', 'M', '87070143451', 'Kraków', 'Rosłońskiego', '22', '3', 10000.00, 'wyzsze', '983614322', 2);
+
+update oddzial set ordynator = 7 where oddzial_id = 2;
+
 select * from pracownik;
 select * from lekarz;
 select * from pielegniarz;
