@@ -99,7 +99,7 @@ EXECUTE FUNCTION sprawdz_czy_ma_dyzur();
 insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '13:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), 2 );
 select * from wizyta;
 delete from wizyta;
-insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '15:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), 2 ); -- nie powinno zadzialac bo lekarz nie pracuje na te zmiane
+-- insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '15:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), 2 ); -- nie powinno zadzialac bo lekarz nie pracuje na te zmiane
 
 
 -- usuniecie  z dyzuru ma powodować usuniecie istniejacych wizyt (pojencjalnie nie chcemy tego robic, ale w przypadku gdy np. nie mozna wprowadzic zastepstwa to akceptujemy usuniecie wizyty)
