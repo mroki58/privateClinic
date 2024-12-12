@@ -5,11 +5,42 @@ set search_path to proj;
 
 select * from dyzur;
 
+set datestyle to european;
+
 insert into dyzur(data, zmiana) values ('20-01-2025', 'R');
 insert into dyzur(data, zmiana) values ('20-01-2025', 'D');
 
 insert into pracownik_dyzur values (1,2), (1,4);
 select * from dyzur join pracownik_dyzur using(dyzur_id);
+
+
+
+-- nie chcemy aby jedna osoba miala dwa dyzury jednego dnia
+create or replace function sprawdz_czy_dzisiaj_zajety()
+returns trigger as $$
+BEGIN
+
+	IF EXISTS (SELECT 1 FROM dyzur d 
+					JOIN pracownik_dyzur pd  USING(dyzur_id) 
+						WHERE pd.pracownik_id = NEW.pracownik_id 
+							AND d.data = (SELECT data FROM dyzur d1
+									where d1.dyzur_id = NEW.dyzur_id)
+						) THEN
+		RAISE EXCEPTION 'Pracownik ma juz dyzur tego dnia';
+		RETURN NULL;
+	END IF;
+	RETURN NEW;
+END
+$$ language plpgsql;
+
+create trigger sprawdzenie_czy_jest_dyzur before insert 
+on pracownik_dyzur for each row 
+execute function sprawdz_czy_dzisiaj_zajety();
+
+insert into pracownik_dyzur values (2,2);
+insert into pracownik_dyzur values (2,3);
+select * from pracownik_dyzur;
+
 
 -- wybieramy dyzur na ktorym chcemy zmienic pracownika
 -- musimy sprawdzic czy pracownicy sa z tego samego oddzialu w innym przypadku mamy wyjatek
@@ -83,7 +114,7 @@ DECLARE
 BEGIN
 	IF EXISTS (SELECT lekarz_id from lekarz WHERE lekarz_id = OLD.pracownik_id) THEN -- jezeli zmiana dotyczy lekarza musimy zmienic lekarza w wizytach
 		SELECT data INTO _data FROM dyzur WHERE dyzur_id = OLD.dyzur_id;  
-		DELETE FROM wizyta WHERE lekarz_id = OLD.lekarz_id AND data = _data;
+		DELETE FROM wizyta WHERE lekarz_id = OLD.pracownik_id AND data = _data;
 	END IF;
 	RETURN OLD;
 END;

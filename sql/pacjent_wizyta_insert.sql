@@ -1,5 +1,6 @@
 -- testowanie insertów dla pacjentów oraz wizyt
 set search_path to proj;
+set datestyle to european;
 
 insert into pacjent(imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokalu, nr_telefonu) values
 ('Jan', 'Kowalski', '44051401359', 'Kraków', 'Mazowiecka', 12, 5, '123456789'),
@@ -53,9 +54,12 @@ select * from rodzaj_wizyty;
 create or replace function sprawdz_czy_ma_dyzur()
 returns trigger as $$
 BEGIN
-	SELECT l.lekarz_id INTO NEW.lekarz_id
+
+	
+	IF NOT EXISTS (SELECT l.lekarz_id 
     			FROM lekarz l
-		    WHERE oddzial_id = ( -- oddzial zgadza sie z rodzajem wizyty
+		    WHERE l.lekarz_id = NEW.lekarz_id
+			AND l.oddzial_id = ( -- oddzial lekarza zgadza sie z rodzajem wizyty
 		        SELECT oddzial_id
 		        	FROM rodzaj_wizyty
 		        WHERE rodzaj_wizyty_id = NEW.rodzaj_wizyty_id
@@ -74,14 +78,12 @@ BEGIN
 				  AND (CASE WHEN d.zmiana = 'D' AND NEW.godzina >= '15:00' THEN true
 							 WHEN d.zmiana = 'R' AND NEW.godzina < '15:00' THEN true
 							 ELSE false END)
-		    )
-		    LIMIT 1;
+		    )) THEN
+			
+		RAISE EXCEPTION 'Nie udalo sie dodac lekarza do wizyty';
+		RETURN NULL;			
+	END IF;
 
-	-- jesli nie mozna dodac zadnego lekarza do wizyty to zglaszamy wyjatek
-    IF NEW.lekarz_id IS NULL THEN
-        RAISE EXCEPTION 'Brak dostępnego lekarza dla podanego rodzaju wizyty';
-		RETURN NULL;
-    END IF;
 
 	RETURN NEW;
 END;
@@ -94,10 +96,10 @@ EXECUTE FUNCTION sprawdz_czy_ma_dyzur();
 
 
 -- sprawdzenie dodania wizyty -- dziala
-insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '13:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), null );
+insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '13:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), 2 );
 select * from wizyta;
 delete from wizyta;
--- insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '15:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), null ); -- nie powinno zadzialac bo lekarz nie pracuje na te zmiane
+insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values (3, '20-01-2025', '15:30', (select rodzaj_wizyty_id from rodzaj_wizyty where opis = 'Badanie EEG'), 2 ); -- nie powinno zadzialac bo lekarz nie pracuje na te zmiane
 
 
 -- usuniecie  z dyzuru ma powodować usuniecie istniejacych wizyt (pojencjalnie nie chcemy tego robic, ale w przypadku gdy np. nie mozna wprowadzic zastepstwa to akceptujemy usuniecie wizyty)
