@@ -17,7 +17,7 @@ const getOddzialy = async (req,res) => {
 
 const getPacjenci = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_get_pacjenci($1)`, [req.body.nazwisko]);
+        const result = await pool.query(`SELECT * FROM proj.api_get_pacjenci($1)`, [req.query.nazwisko]);
         let rows = result.rows
         res.send(rows)
     }
@@ -29,23 +29,10 @@ const getPacjenci = async (req, res) => {
     }
 }
 
-const getLekarze = async (req, res) => {
-    try {
-        const result = await pool.query(`SELECT * FROM proj.api_get_lekarz($1)`, [req.body.oddzial]);
-        let rows = result.rows
-        res.send(rows)
-    }
-    catch (err) {
-        if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
-        }
-        return res.status(500).send({ error: 'Database error', details: err.message });
-    }
-}
 
 const getPieleg = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_get_pielegniarz($1)`, [req.body.oddzial]);
+        const result = await pool.query(`SELECT * FROM proj.api_get_pielegniarz($1)`, [req.query.oddzial]);
         let rows = result.rows
         res.send(rows)
     }
@@ -61,5 +48,4 @@ const getPieleg = async (req, res) => {
 
 module.exports = {  getOddzialy,
                     getPacjenci,
-                    getLekarze,
                     getPieleg };

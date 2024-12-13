@@ -1,7 +1,5 @@
 const express = require('express');
 const dyzurRouter = express.Router();
-const dyzurController = require('../controllers/dyzurController')
-
 
 const { getForLekarz,
         getForPieleg

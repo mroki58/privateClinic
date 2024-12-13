@@ -1,8 +1,8 @@
-const pool = require('../model/model');
+const pool = require('../model/model')
 
-const getForLekarz = async (req, res) => {
+const getLekarz = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_lekarze($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.api_get_lekarz($1)`, [req.query.oddzial]);
         let rows = result.rows
         res.send(rows)
     }
@@ -14,9 +14,9 @@ const getForLekarz = async (req, res) => {
     }
 }
 
-const getForPieleg = async (req, res) => {
+const getStats = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_pieleg($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.api_wizyty_lekarze_stat($1, $2)`, [req.query.miesiac, req.query.rok]);
         let rows = result.rows
         res.send(rows)
     }
@@ -28,7 +28,6 @@ const getForPieleg = async (req, res) => {
     }
 }
 
-module.exports = {
-    getForLekarz,
-    getForPieleg
-}
+module.exports = {getLekarz,
+                  getStats 
+                }

@@ -1,8 +1,8 @@
-const pool = require('../model/model');
+const pool = require('../model/model')
 
-const getForLekarz = async (req, res) => {
+const getRodzaj = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_lekarze($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.lekarz_dla_wizyty_view`);
         let rows = result.rows
         res.send(rows)
     }
@@ -14,9 +14,9 @@ const getForLekarz = async (req, res) => {
     }
 }
 
-const getForPieleg = async (req, res) => {
+const getLekarzForWizyta = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_pieleg($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.api_wizyty_lekarze($1, $2)`, [req.query.data, req.query.nazwisko]);
         let rows = result.rows
         res.send(rows)
     }
@@ -27,8 +27,10 @@ const getForPieleg = async (req, res) => {
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
 }
+
+
 
 module.exports = {
-    getForLekarz,
-    getForPieleg
+    getRodzaj,
+    getLekarzForWizyta
 }
