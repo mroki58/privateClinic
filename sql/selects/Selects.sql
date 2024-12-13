@@ -2,11 +2,24 @@
 set search_path to proj;
 set datestyle to european;
 
+-- wyswietlenie informacji o oddzialach
+create view oddzialy_view as
+select 
+					o.nazwa, 
+                    o.nr_budynku, 
+                    CONCAT(p1.imie, ' ', p1.nazwisko) as ordynator,  
+                    CONCAT(p2.imie, ' ', p2.nazwisko) as oddziałowy 
+                FROM proj.oddzial o 
+                JOIN proj.pracownik p1 ON p1.pracownik_id = o.ordynator 
+                JOIN proj.pracownik p2 ON p2.pracownik_id = o.oddzialowy;
+               
+select * from oddzialy_view;
+
 
 -- podstawowe dane pacjentow aby ulatwic wprowadzanie ich do wizyt
 select pacjent_id, imie, nazwisko, nr_telefonu, ulica 
 				from pacjent
-			where nazwisko like 'Kow%';
+			where nazwisko like 'Kow' || '%';
 		
 		
 -- podstawowe informacje na temat lekarzy
@@ -24,13 +37,16 @@ select pracownik_id, imie, nazwisko, nr_telefonu, o.oddzial_id, o.nazwa as oddzi
 	where o.nazwa like 'Neu%';
 
 
--- wyswietlanie dostepnych rodzajow wizyt dla oddzialu oraz lekarzow ktorych mozemy do nich przypisac
+-- wyswietlanie dostepnych rodzajow wizyt oraz lekarzow ktorych mozemy do nich przypisac
 -- potencjalnie ma za zadanie ulatwic przypisywanie lekarza do wizyty
+create view lekarz_dla_wizyty_view AS
 select  rw.rodzaj_wizyty_id, rw.opis, string_agg(CONCAT('id:',p.pracownik_id,' ', p.imie,' ', p.nazwisko),', ') as dostepni_pracownicy 
 		from rodzaj_wizyty rw
 			join lekarz l USING(oddzial_id)
 			join pracownik p ON p.pracownik_id = l.lekarz_id 
 		group by rw.rodzaj_wizyty_id, rw.opis;
+	
+select * from lekarz_dla_wizyty_view;
 		
 
 
