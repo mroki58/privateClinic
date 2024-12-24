@@ -12,4 +12,8 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000, // Czas oczekiwania na nowe połączenie
 });
 
+pool.on('connect', (pool) => {
+    pool.query('SET search_path TO proj');
+});
+
 module.exports = pool;

@@ -2,12 +2,14 @@ const express = require('express');
 const wizytaRouter = express.Router();
 
 const { 
-    getRodzaj,
-    getLekarzForWizyta
+    getLekarzForRodzaj,
+    getLekarzForWizyta,
+    getRodzaj
 }
     = require('../controllers/wizytaController');
 
 
-wizytaRouter.get('/', getRodzaj);
+wizytaRouter.get('/', getLekarzForRodzaj);
 wizytaRouter.get('/lekarz', getLekarzForWizyta)
+wizytaRouter.get('/rodzaj', getRodzaj)
 module.exports = wizytaRouter;

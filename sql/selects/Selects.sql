@@ -5,13 +5,14 @@ set datestyle to european;
 -- wyswietlenie informacji o oddzialach
 create view oddzialy_view as
 select 
+					o.oddzial_id,
 					o.nazwa, 
                     o.nr_budynku, 
                     CONCAT(p1.imie, ' ', p1.nazwisko) as ordynator,  
                     CONCAT(p2.imie, ' ', p2.nazwisko) as oddziałowy 
                 FROM proj.oddzial o 
-                JOIN proj.pracownik p1 ON p1.pracownik_id = o.ordynator 
-                JOIN proj.pracownik p2 ON p2.pracownik_id = o.oddzialowy;
+                left JOIN proj.pracownik p1 ON p1.pracownik_id = o.ordynator 
+                left JOIN proj.pracownik p2 ON p2.pracownik_id = o.oddzialowy;
                
 select * from oddzialy_view;
 
@@ -106,3 +107,12 @@ select p.imie, p.nazwisko, COUNT(*) as ilosc_wizyt
 					where extract(month from w.data) = 1  and extract(YEAR from w.data) = 2025-- sprawdzenie dla stycznia 2025
 						group by p.imie, p.nazwisko 
 					order by ilosc_wizyt;
+				
+				
+-- pobiera wszystkie rodzaje wizyt (potrzebne dla innych zapytan)
+create view rodzaj_wizyty_view as
+select rw.rodzaj_wizyty_id, rw.opis, o.nazwa 
+					from rodzaj_wizyty rw
+						join oddzial o USING(oddzial_id);
+
+select * from rodzaj_wizyty_view;
