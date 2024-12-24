@@ -79,6 +79,22 @@ const postOddzial = async (req, res) => {
     }
 }
 
+const postPacjent = async (req,res) => {
+    try {
+        const { imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokalu, nr_telefonu } = req.body;
+        const values = [imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokalu, nr_telefonu];
+
+        const result = await pool.query(`insert into pacjent(imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokalu, nr_telefonu) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, values);
+        res.send({ error: 'Zarejestrowano pacjenta' });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }
+}
+
 
 
 
@@ -87,4 +103,6 @@ module.exports = {  getOddzialy,
                     getPacjenci,
                     getPieleg,
                     postPieleg,
-                    postOddzial };
+                    postOddzial,
+                    postPacjent,
+                };

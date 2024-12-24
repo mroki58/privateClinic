@@ -40,14 +40,45 @@ const getRodzaj = async (req, res) => {
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
+}
 
+const postRodzaj =  async(req, res) => {
+    try {
+        const {opis, cena, oddzial_id} = req.body;
+        const values = [opis, cena, oddzial_id]
 
+        const result = await pool.query(`INSERT INTO rodzaj_wizyty(opis, cena, oddzial_id) VALUES ($1, $2, $3)`, values);
+        res.send({error: "Nowy rodzaj wizyty dodany!"});
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }
+}
 
+const postNowaWizyta = async(req, res) => {
+    try {
+        const { pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id } = req.body;
+        const values = [pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id]
+
+        const result = await pool.query(`insert into wizyta(pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id) values ($1, $2, $3, $4, $5)`, values);
+        res.send({ error: "Wizyta została dodana!" });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }    
 }
 
 
 module.exports = {
     getLekarzForRodzaj,
     getLekarzForWizyta,
-    getRodzaj
+    getRodzaj,
+    postRodzaj,
+    postNowaWizyta,
 }

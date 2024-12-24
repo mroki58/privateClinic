@@ -9,7 +9,9 @@ const { getOddzialy,
         getPacjenci,
         getPieleg,
         postPieleg,
-        postOddzial} 
+        postOddzial,
+        postPacjent,
+} 
         = require('../controllers/controller');
 
 
@@ -17,6 +19,7 @@ router.get('/oddzial', getOddzialy);
 router.post('/oddzial', postOddzial);
 
 router.get('/pacjent', getPacjenci);
+router.post('/pacjent', postPacjent);
 
 router.get('/pieleg', getPieleg);
 router.post('/pieleg', postPieleg);
