@@ -4,7 +4,6 @@
     <title>Prywatna Klinika</title>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="styles/style.css"/>
-    <script src="script.js"></script>
 </head>
 
 <body>
@@ -14,15 +13,222 @@
 
     <nav class = "pageNav">
         <h3>Nawigacja</h3>
-        <a href="/oddzial">Nasze oddzialy</a> <br/>
-        <a>Zostan pacjentem</a> <br/>
+        <h5>Dodawanie danych</h5>
+        <hr>
+        <button onclick="showForm('formPacjent')">Zarejestruj pacjenta</button> <br />
+        <button onclick="showForm('formLekarz', true)">Dodaj lekarza</button> <br/>
+        <button onclick="showForm('formPieleg', true)">Dodaj pielęgniarza</button> <br />
+        <button onclick="showForm('formOddzial')">Dodaj oddział</button> <br />
+        <hr>
+        <button onclick="showForm('formDyzur')">Dodaj dyżur</button> <br />
+        <!-- Dla przycisku do dodawania na dyzur potrzebny GET /api/pracownik TO DO-->
+        <hr>
+        <!--Przyciski dla dodawania rodzaju wizyty i pacjenta dla wizyty TO DO-->
+
+
+        
     </nav>
 
     <main class="pageMain">
-        <article>
-            Prywatna klinika Kraków ulica Rosłońskiego zapoznaj się 
-            z naszymi usługami.
-        </article>
+        <div id="formArea">
+            <!-- Dla lekarza-->
+            <form id="formLekarz" onsubmit="submitForm(event, '/api/lekarz')" style="display: none;">
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie" required>
+                <br>
+            
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+                <br>
+            
+                <label for="plec">Płeć:</label>
+                <select id="plec" name="plec" required>
+                    <option value="M">Mężczyzna</option>
+                    <option value="K">Kobieta</option>
+                </select>
+                <br>
+            
+                <label for="pesel">PESEL:</label>
+                <input type="text" id="pesel" name="pesel" pattern="\d{11}" title="Podaj poprawny PESEL (11 cyfr)" required>
+                <br>
+            
+                <label for="miejscowosc">Miejscowość:</label>
+                <input type="text" id="miejscowosc" name="miejscowosc" required>
+                <br>
+            
+                <label for="ulica">Ulica:</label>
+                <input type="text" id="ulica" name="ulica" required>
+                <br>
+            
+                <label for="nr_domu">Numer domu:</label>
+                <input type="text" id="nr_domu" name="nr_domu" required>
+                <br>
+            
+                <label for="nr_lokalu">Numer lokalu:</label>
+                <input type="text" id="nr_lokalu" name="nr_lokalu">
+                <br>
+            
+                <label for="pensja">Pensja:</label>
+                <input type="number" id="pensja" name="pensja" min="0" step="0.01" required>
+                <br>
+            
+                <label for="wyksztalcenie">Wykształcenie</label>
+                <select id="wyksztalcenie" name="wyksztalcenie" required>
+                    <option value="podstawowe">Podstawowe</option>
+                    <option value="srednie">Średnie</option>
+                    <option value="licencjat">Licencjat</option>
+                    <option value="wyzsze">Wyższe</option>
+                </select>
+                <br>
+            
+                <label for="nr_telefonu">Numer telefonu:</label>
+                <input type="text" id="nr_telefonu" name="nr_telefonu" pattern="\d{9,12}"
+                    title="Podaj poprawny numer telefonu (9-12 cyfr)" required>
+                <br>
+            
+                <label for="oddzial_id">Oddział:</label>
+                <select id="oddzial_id" name="oddzial_id" required>
+                
+                </select>
+                <br>
+            
+                <button type="submit">Dodaj lekarza</button>
+            </form>
+
+            <form id="formPieleg" onsubmit="submitForm(event, '/api/pieleg')" style="display: none;">
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie" required>
+                <br>
+            
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+                <br>
+            
+                <label for="plec">Płeć:</label>
+                <select id="plec" name="plec" required>
+                    <option value="M">Mężczyzna</option>
+                    <option value="K">Kobieta</option>
+                </select>
+                <br>
+            
+                <label for="pesel">PESEL:</label>
+                <input type="text" id="pesel" name="pesel" pattern="\d{11}" title="Podaj poprawny PESEL (11 cyfr)" required>
+                <br>
+            
+                <label for="miejscowosc">Miejscowość:</label>
+                <input type="text" id="miejscowosc" name="miejscowosc" required>
+                <br>
+            
+                <label for="ulica">Ulica:</label>
+                <input type="text" id="ulica" name="ulica" required>
+                <br>
+            
+                <label for="nr_domu">Numer domu:</label>
+                <input type="text" id="nr_domu" name="nr_domu" required>
+                <br>
+            
+                <label for="nr_lokalu">Numer lokalu:</label>
+                <input type="text" id="nr_lokalu" name="nr_lokalu">
+                <br>
+            
+                <label for="pensja">Pensja:</label>
+                <input type="number" id="pensja" name="pensja" min="0" step="0.01" required>
+                <br>
+            
+                <label for="wyksztalcenie">Wykształcenie</label>
+                <select id="wyksztalcenie" name="wyksztalcenie" required>
+                    <option value="podstawowe">Podstawowe</option>
+                    <option value="srednie">Średnie</option>
+                    <option value="licencjat">Licencjat</option>
+                    <option value="wyzsze">Wyższe</option>
+                </select>
+                <br>
+            
+                <label for="nr_telefonu">Numer telefonu:</label>
+                <input type="text" id="nr_telefonu" name="nr_telefonu" pattern="\d{9,12}"
+                    title="Podaj poprawny numer telefonu (9-12 cyfr)" required>
+                <br>
+            
+                <label for="oddzial_id">Oddział:</label>
+                <select id="oddzial_id" name="oddzial_id" required>
+            
+                </select>
+                <br>
+            
+                <button type="submit">Dodaj pielęgniarza</button>
+            </form>
+
+            <form id="formOddzial" onsubmit="submitForm(event, '/api/oddzial')" style="display: none;">
+                <label for="nazwa">Nazwa:</label>
+                <input type="text" id="nazwa" name="nazwa" required>
+                <br>
+            
+                <label for="nr_budynku">Numer budynku:</label>
+                <input type="text" id="nr_budynku" name="nr_budynku" required>
+                <br>
+                    
+                <button type="submit">Dodaj oddział</button>
+                <br>
+                <span style="font-size: 11px;">Pamietaj, ze nowo utworzony oddzial nie posiada jeszcze ustalonego ordynatora i oddzialowego co można zmienić ...</span>
+            </form>
+
+            <form id="formPacjent" onsubmit="submitForm(event, '/api/pacjent')" style="display: none;">
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie" required>
+                <br>
+
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+                <br>
+
+                <label for="PESEL">PESEL:</label>
+                <input type="text" id="PESEL" name="PESEL" pattern="\d{11}" title="Podaj poprawny PESEL (11 cyfr)" required>
+                <br>
+
+                <label for="miejscowosc">Miejscowość:</label>
+                <input type="text" id="miejscowosc" name="miejscowosc" required>
+                <br>
+
+                <label for="ulica">Ulica:</label>
+                <input type="text" id="ulica" name="ulica" required>
+                <br>
+
+                <label for="nr_domu">Numer domu:</label>
+                <input type="text" id="nr_domu" name="nr_domu" required>
+                <br>
+
+                <label for="nr_lokalu">Numer lokalu:</label>
+                <input type="text" id="nr_lokalu" name="nr_lokalu">
+                <br>
+
+                <label for="nr_telefonu">Numer telefonu:</label>
+                <input type="text" id="nr_telefonu" name="nr_telefonu" pattern="\d{9,12}"
+                    title="Podaj poprawny numer telefonu (9-12 cyfr)" required>
+                <br>
+
+                <button type="submit">Dodaj pacjenta</button>
+            </form>
+
+            <form id="formDyzur" onsubmit="submitForm(event, '/api/dyzur')" style="display: none;">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <br>
+            
+                <label for="zmiana">Zmiana:</label>
+                <select id="zmiana" name="zmiana" required>
+                    <option value="R">Ranna</option>
+                    <option value="D">Dzienna</option>
+                </select>
+                <br>
+            
+                <button type="submit">Dodaj dyżur</button>
+            </form>
+
+        </div>
+
+        <div id="dataArea">
+            
+        </div>
     </main>
 
     <aside class="pageAside">
@@ -32,6 +238,9 @@
     <footer class="pageFooter">
         Autor: Igor Sala &#169
     </footer>
+
+    <!-- Skrypty po zaladowaniu -->
+    <script src="scripts/script1.js"></script>
 
 </body>
 </html>
