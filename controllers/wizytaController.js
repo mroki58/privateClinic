@@ -8,7 +8,7 @@ const getLekarzForRodzaj = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -22,7 +22,7 @@ const getLekarzForWizyta = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -36,7 +36,7 @@ const getRodzaj = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -52,7 +52,7 @@ const postRodzaj =  async(req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -68,7 +68,7 @@ const postNowaWizyta = async(req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }    

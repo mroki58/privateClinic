@@ -8,7 +8,7 @@ const getOddzialy = async (req,res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -23,7 +23,7 @@ const getPacjenci = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -38,7 +38,7 @@ const getPieleg = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -55,7 +55,7 @@ const postPieleg = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -73,7 +73,7 @@ const postOddzial = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -89,7 +89,29 @@ const postPacjent = async (req,res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }
+}
+
+// dodac jeszcze oddzial i czy lekarz czy pielegniarka
+const getPracownicy = async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT pracownik_id, CONCAT(imie,' ',nazwisko) AS imie_nazwisko, 
+                    (CASE WHEN lekarz_id IS NOT NULL THEN 'Lekarz' WHEN pielegniarz_id IS NOT NULL THEN 'Pielegniarz' ELSE 'Inne' END) as typ,
+                    (CASE WHEN lekarz_id IS NOT NULL THEN o1.nazwa WHEN pielegniarz_id IS NOT NULL THEN o2.nazwa ELSE 'Inne' END) as oddzial
+                                FROM pracownik p
+                                    LEFT JOIN lekarz l ON pracownik_id = lekarz_id
+                                    LEFT JOIN pielegniarz pi ON pracownik_id = pielegniarz_id
+                                    LEFT JOIN oddzial o1 ON l.oddzial_id = o1.oddzial_id
+                                    LEFT JOIN oddzial o2 ON pi.oddzial_id = o2.oddzial_id`);
+        let rows = result.rows
+        res.send(rows)
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -105,4 +127,5 @@ module.exports = {  getOddzialy,
                     postPieleg,
                     postOddzial,
                     postPacjent,
+                    getPracownicy
                 };

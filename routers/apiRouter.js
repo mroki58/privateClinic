@@ -11,6 +11,7 @@ const { getOddzialy,
         postPieleg,
         postOddzial,
         postPacjent,
+        getPracownicy,
 } 
         = require('../controllers/controller');
 
@@ -27,6 +28,10 @@ router.post('/pieleg', postPieleg);
 router.use('/lekarz', lekarzRouter);
 router.use('/wizyta', wizytaRouter);
 router.use('/dyzur', dyzurRouter);
+
+router.get('/pracownicy', getPracownicy)
+
+
 
 
 module.exports = router;

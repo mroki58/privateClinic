@@ -8,7 +8,7 @@ const getForLekarz = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -22,7 +22,7 @@ const getForPieleg = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -38,7 +38,7 @@ const postNewDyzur = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -55,7 +55,39 @@ const postNewPracownikOnDyzur = async (req, res) => {
     }
     catch (err) {
         if (err.code === 'P0001') {
-            res.status(400).send({ error: err.message });
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }
+}
+
+const getDyzury = async (req, res) => {
+    try {
+        const currentDate = new Date();
+
+        const day = currentDate.getDate();       
+        const month = currentDate.getMonth() + 1; 
+        const year = currentDate.getFullYear();    
+
+        if(day < 10)
+        {
+            day = `0${day}`
+        }
+
+        if (month < 10) {
+            month = `0${month}`
+        }
+
+        const date1 = `${year}-${month}-${day}`
+
+        query = `SELECT * FROM dyzur WHERE data >= '${date1}' ORDER BY data ASC`
+        const result = await pool.query(query);
+        let rows = result.rows
+        res.send(rows)
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
         }
         return res.status(500).send({ error: 'Database error', details: err.message });
     }
@@ -66,4 +98,5 @@ module.exports = {
     getForPieleg,
     postNewDyzur,
     postNewPracownikOnDyzur,
+    getDyzury,
 }

@@ -21,7 +21,7 @@
         <button onclick="showForm('formOddzial')">Dodaj oddział</button> <br />
         <hr>
         <button onclick="showForm('formDyzur')">Dodaj dyżur</button> <br />
-        <!-- Dla przycisku do dodawania na dyzur potrzebny GET /api/pracownik TO DO-->
+        <button onclick="showFormForDyzur('formDyzurPracownik')">Dodaj pracownika na dyżur</button>
         <hr>
         <!--Przyciski dla dodawania rodzaju wizyty i pacjenta dla wizyty TO DO-->
 
@@ -222,6 +222,28 @@
                 <br>
             
                 <button type="submit">Dodaj dyżur</button>
+            </form>
+
+            <form id="formDyzurPracownik" onsubmit="submitFormForDyzur(event, '/api/dyzur/dodaj')" style="display: none;">
+                <label for="oddzial_id">Oddział: </label>
+                <select id="oddzial_id" name="oddzial_id" required>
+                    
+                </select>
+                <br>
+
+            
+                <label for="pracownik_id">Pracownik:</label>
+                <select id="pracownik_id" name="pracownik_id" required>
+                
+                </select>
+                <br>
+
+                <label for="dyzur_id">Nr dyżuru</label>
+                <input type="number" id="dyzur_id" name="dyzur_id" required>
+
+                <br>
+            
+                <button type="submit">Dodaj na dyżur</button>
             </form>
 
         </div>
