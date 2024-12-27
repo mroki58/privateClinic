@@ -1,6 +1,7 @@
 -- testowanie insertów dla pacjentów oraz wizyt
 set search_path to proj;
 set datestyle to european;
+set timezone to 'Europe/Warsaw';
 
 insert into pacjent(imie, nazwisko, PESEL, miejscowosc, ulica, nr_domu, nr_lokalu, nr_telefonu) values
 ('Jan', 'Kowalski', '44051401359', 'Kraków', 'Mazowiecka', 12, 5, '123456789'),
@@ -55,34 +56,46 @@ create or replace function sprawdz_czy_ma_dyzur()
 returns trigger as $$
 BEGIN
 
-	
-	IF NOT EXISTS (SELECT l.lekarz_id 
-    			FROM lekarz l
-		    WHERE l.lekarz_id = NEW.lekarz_id
-			AND l.oddzial_id = ( -- oddzial lekarza zgadza sie z rodzajem wizyty
-		        SELECT oddzial_id
-		        	FROM rodzaj_wizyty
-		        WHERE rodzaj_wizyty_id = NEW.rodzaj_wizyty_id
-		    )
-		    AND l.lekarz_id NOT IN ( -- lekarz nie ma wizyty o tej godzinie
-		        SELECT lekarz_id
-		        FROM wizyta
-		        WHERE data = NEW.data
-		          AND godzina = NEW.godzina
-		    )
-		    AND EXISTS( -- czy lekarz wogole ma dyzur tego dnia i czy jest na odpowiedniej zmianie
-		        SELECT 1
-		        FROM dyzur d JOIN pracownik_dyzur pd USING(dyzur_id)
-		        WHERE pracownik_id = l.lekarz_id
-		          AND d.data = NEW.data
-				  AND (CASE WHEN d.zmiana = 'D' AND NEW.godzina >= '15:00' THEN true
-							 WHEN d.zmiana = 'R' AND NEW.godzina < '15:00' THEN true
-							 ELSE false END)
-		    )) THEN
-			
-		RAISE EXCEPTION 'Nie udalo sie dodac lekarza do wizyty';
-		RETURN NULL;			
-	END IF;
+-- Sprawdzenie 1: Czy lekarz istnieje i czy jego oddział zgadza się z rodzajem wizyty
+IF NOT EXISTS (
+    SELECT 1
+    FROM lekarz l
+    WHERE l.lekarz_id = NEW.lekarz_id
+      AND l.oddzial_id = (
+          SELECT oddzial_id
+          FROM rodzaj_wizyty
+          WHERE rodzaj_wizyty_id = NEW.rodzaj_wizyty_id
+      )
+) THEN
+    RAISE EXCEPTION 'Lekarz nie istnieje lub jego oddział nie pasuje do rodzaju wizyty.';
+    RETURN NULL;
+END IF;
+
+-- Sprawdzenie 2: Czy lekarz nie ma już wizyty o tej samej dacie i godzinie
+IF EXISTS (
+    SELECT 1
+    FROM wizyta
+    WHERE lekarz_id = NEW.lekarz_id
+      AND data = NEW.data
+      AND godzina = NEW.godzina
+) THEN
+    RAISE EXCEPTION 'Lekarz ma już wizytę o tej godzinie.';
+    RETURN NULL;
+END IF;
+
+-- Sprawdzenie 3: Czy lekarz ma dyżur w danym dniu i na odpowiedniej zmianie
+IF NOT EXISTS (
+    SELECT 1
+    FROM dyzur d JOIN pracownik_dyzur pd USING(dyzur_id)
+    WHERE pracownik_id = NEW.lekarz_id
+      AND d.data = NEW.data
+      AND (CASE WHEN d.zmiana = 'D' AND NEW.godzina >= '15:00' THEN true
+                WHEN d.zmiana = 'R' AND NEW.godzina < '15:00' THEN true
+                ELSE false END)
+) THEN
+    RAISE EXCEPTION 'Lekarz nie ma dyżuru w tym dniu lub jest na niewłaściwej zmianie.';
+    RETURN NULL;
+END IF;
 
 
 	RETURN NEW;

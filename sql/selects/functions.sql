@@ -127,5 +127,19 @@ $$ language plpgsql;
 
 select * from api_wizyty_lekarze_stat(1, 2025);
 
+-- dla rodzaju wizyty jaki lekarz moze zostać zapisany
+create or replace function api_lekarz_rodzaj(INT)
+returns TABLE(lekarz_id INT, imie_nazwisko TEXT) AS
+$$
+BEGIN
+	return query
+	select p.pracownik_id, CONCAT(p.imie, ' ', p.nazwisko) 
+		from rodzaj_wizyty rw
+			join oddzial USING(oddzial_id)
+			join lekarz l USING(oddzial_id)
+			join pracownik p ON p.pracownik_id = l.lekarz_id
+		WHERE rw.rodzaj_wizyty_id = $1;
+END;
+$$ language plpgsql;
 
 

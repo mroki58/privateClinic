@@ -45,7 +45,23 @@ const postLekarz = async (req, res) => {
     }
 }
 
+
+const getRodzajForLekarz = async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM proj.api_lekarz_rodzaj($1)`, [req.query.rw]);
+        let rows = result.rows
+        res.send(rows)
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: 'Database error', details: err.message });
+    }
+}
+
 module.exports = {getLekarz,
                   getStats,
-                  postLekarz 
+                  postLekarz,
+                  getRodzajForLekarz, 
                 }

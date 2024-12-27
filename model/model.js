@@ -14,6 +14,7 @@ const pool = new Pool({
 
 pool.on('connect', (pool) => {
     pool.query('SET search_path TO proj');
+    pool.query("SET timezone to 'Europe/Warsaw'")
 });
 
 module.exports = pool;

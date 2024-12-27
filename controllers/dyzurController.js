@@ -80,7 +80,7 @@ const getDyzury = async (req, res) => {
 
         const date1 = `${year}-${month}-${day}`
 
-        query = `SELECT * FROM dyzur WHERE data >= '${date1}' ORDER BY data ASC`
+        query = `SELECT * FROM dyzur WHERE data >= '${date1}' ORDER BY data ASC, zmiana DESC`
         const result = await pool.query(query);
         let rows = result.rows
         res.send(rows)

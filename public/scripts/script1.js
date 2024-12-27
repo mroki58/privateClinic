@@ -52,6 +52,7 @@ async function submitForm(event, url)
             body: JSON.stringify(data),
         });
 
+        console.log(data);
         const result = await response.json();
         if (response.ok) {
             alert(result.error || 'Dane dodane pomyślnie!');
@@ -75,6 +76,11 @@ async function getPracownicy() {
 // dyzur musi zwracac wszystko z dyzuru
 async function getDyzury() {
     return fetch('/api/dyzur')
+        .then(res => res.json())
+}
+
+async function getOddzialy(){
+    return fetch('/api/oddzial')
         .then(res => res.json())
 }
 
@@ -105,10 +111,11 @@ function showFormForDyzur(form_id)
     let table = '<table> <thead> <tr> <th> dyzur_id </th> <th> data </th> <th> zmiana </th> </tr> <tbody>';
     getDyzury()
     .then(dyzury => {
-        console.log(dyzury)
         for(let dyzur of dyzury)
         {
-            table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${dyzur.data.split('T')[0]}</td> <td> ${dyzur.zmiana}</td> </tr>`
+            const data = new Date(dyzur.data.split('T')[0]); // Tworzymy obiekt Date z stringa
+            data.setDate(data.getDate() + 1);
+            table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${data.toISOString().slice(0, 10)}</td> <td> ${dyzur.zmiana}</td> </tr>`
         }
         table += '</tbody> </table>'
 
