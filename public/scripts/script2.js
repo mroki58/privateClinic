@@ -208,7 +208,7 @@ async function findStatsForLekarz(event, url, form_id)
 
         console.log(result)
         if (response.ok) {
-            let table = '<table> <thead> <tr> <th> imie </th> <th> nazwisko </th> <th> ilosc_wizyt </th> </tr> </thead> <tbody>';
+            let table = '<table> <thead> <tr> <th> rank </th> <th> imie </th> <th> nazwisko </th> <th> oddział </th> <th> ilosc_wizyt </th> </tr> </thead> <tbody>';
             for (let el of result) {
                 table += '<tr>'
                 for (const key in el) {
@@ -232,4 +232,48 @@ async function findStatsForLekarz(event, url, form_id)
         console.error('Błąd sieci:', error);
         alert('Wystąpił błąd sieci.');
     }  
+}
+
+async function findStatsForOddzial(event, url, form_id)
+{
+    event.preventDefault();
+
+    const input = document.querySelector(` #${form_id} > #oddzial_id`);
+    console.log(input.value)
+    url += `?oddzial_id=${input.value}`
+
+    try {
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        console.log(result)
+        if (response.ok) {
+            let table = '<table> <thead> <tr> <th> rok </th> <th> miesiąc </th> <th> suma </th>  </tr> </thead> <tbody>';
+            for (let el of result) {
+                table += '<tr>'
+                for (const key in el) {
+                    if (key === 'data') {
+                        continue;
+                    } else {
+                        if(el[key] != null)    
+                            table += `<td> ${el[key]} </td>`
+                        else 
+                            table += '<td></td>'
+                    }
+                }
+
+                table += '</tr>'
+            }
+
+            dataArea.innerHTML = table;
+
+
+        } else {
+            alert(result.error || 'Wystąpił błąd.');
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+        alert('Wystąpił błąd sieci.');
+    }
 }

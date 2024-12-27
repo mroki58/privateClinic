@@ -100,12 +100,13 @@ select * from przychody_dla_oddzialow_view;
 
 
 -- sprawdzenie statystyk ile wizyt mial poszczegolny lekarz w danym miesiacu roku
-select p.imie, p.nazwisko, COUNT(*) as ilosc_wizyt 
+select rank() over (order by COUNT(*)),p.imie, p.nazwisko,o.nazwa as oddzial,COUNT(*) as ilosc_wizyt  
 					from lekarz l
 						join pracownik p on l.lekarz_id = p.pracownik_id
 						join wizyta w USING(lekarz_id)
+						join oddzial o USING(oddzial_id)
 					where extract(month from w.data) = 1  and extract(YEAR from w.data) = 2025-- sprawdzenie dla stycznia 2025
-						group by p.imie, p.nazwisko 
+						group by p.imie, p.nazwisko, o.nazwa 
 					order by ilosc_wizyt;
 				
 				
@@ -116,3 +117,14 @@ select rw.rodzaj_wizyty_id, rw.opis, o.nazwa
 						join oddzial o USING(oddzial_id);
 
 select * from rodzaj_wizyty_view;
+
+
+-- statystyki dla oddziału ile wygenerował przychodu
+select extract(year from w.data)::INTEGER as rok,extract(month from w.data)::INTEGER as miesiac, SUM(rw.cena)
+	from oddzial o 
+		join rodzaj_wizyty rw USING(oddzial_id)
+		join wizyta w USING(rodzaj_wizyty_id)
+	where o.oddzial_id = 1
+	group by cube (rok, miesiac)
+	order by rok, miesiac;
+

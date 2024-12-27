@@ -36,6 +36,7 @@
         <button onclick="showForm('findDyzuryPielegniarz')"> Dyżury pielęgniarzy </button>
         <hr>
         <button onclick="showForm('findStatsForLekarz')"> Statystyki dla lekarzy </button>
+        <button onclick="showForm('findStatsForOddzial', true)">Przychody dla oddziałów</button>
 
         
     </nav>
@@ -352,7 +353,15 @@
 
                 <button type="submit">Pobierz informacje</button>
             </form>
-       
+
+        <form id="findStatsForOddzial" onsubmit="findStatsForOddzial(event, '/api/oddzial/stats', 'findStatsForOddzial')" style="display: none;">
+            <select id="oddzial_id" name="oddzial_id" required>
+            
+            </select>
+            <br>
+            <button type="submit">Pobierz informacje</button>
+
+        </form>
         </div>
 
         

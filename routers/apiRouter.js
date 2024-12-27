@@ -12,12 +12,15 @@ const { getOddzialy,
         postOddzial,
         postPacjent,
         getPracownicy,
+        getStatsForOddzial,
 } 
         = require('../controllers/controller');
 
 
 router.get('/oddzial', getOddzialy); 
 router.post('/oddzial', postOddzial);
+
+router.get('/oddzial/stats', getStatsForOddzial)
 
 router.get('/pacjent', getPacjenci);
 router.post('/pacjent', postPacjent);

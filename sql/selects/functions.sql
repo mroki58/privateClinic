@@ -106,20 +106,20 @@ $$ language plpgsql;
 
 select * from api_wizyty_lekarze('20-01-2025', 'Zie');
 
-
 -- sprawdzenie ilosci wizyt dla lekarzy z danego miesiaca- $1 z roku - $2
 create or replace function api_wizyty_lekarze_stat(INT, INT)
-RETURNS TABLE(imie TEXT, nazwisko TEXT, ilosc_wizyt BIGINT) as
+RETURNS TABLE(rank BIGINT,imie TEXT, nazwisko TEXT, oddzial text, ilosc_wizyt BIGINT ) as
 $$
 BEGIN
 
 	return query
-	select p.imie, p.nazwisko, COUNT(*) as ilosc_wizyt 
-					from proj.lekarz l
-						join proj.pracownik p on l.lekarz_id = p.pracownik_id
-						join proj.wizyta w USING(lekarz_id)
-					where extract(month from w.data) = $1  and extract(YEAR from w.data) = $2
-						group by p.imie, p.nazwisko 
+	select rank() over (order by COUNT(*)),p.imie, p.nazwisko,o.nazwa ,COUNT(*) as ilosc_wizyt  
+					from lekarz l
+						join pracownik p on l.lekarz_id = p.pracownik_id
+						join wizyta w USING(lekarz_id)
+						join oddzial o USING(oddzial_id)
+					where extract(month from w.data) = $1  and extract(YEAR from w.data) = $2-- sprawdzenie dla stycznia 2025
+						group by p.imie, p.nazwisko, o.nazwa 
 					order by ilosc_wizyt;
 				
 end;
@@ -141,5 +141,22 @@ BEGIN
 		WHERE rw.rodzaj_wizyty_id = $1;
 END;
 $$ language plpgsql;
+
+create or replace function api_oddzial_stats(INT)
+returns TABLE(rok INT, miesiac INT, suma NUMERIC) as
+$$
+BEGIN
+	return query
+	select extract(year from w.data)::INTEGER as rok,extract(month from w.data)::INTEGER as miesiac, SUM(rw.cena)
+	from oddzial o 
+		join rodzaj_wizyty rw USING(oddzial_id)
+		join wizyta w USING(rodzaj_wizyty_id)
+	where o.oddzial_id = $1
+	group by cube (rok, miesiac)
+	order by rok, miesiac;
+END;
+$$ language plpgsql;
+
+select * from api_oddzial_stats(1);
 
 
