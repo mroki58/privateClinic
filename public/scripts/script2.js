@@ -147,3 +147,89 @@ async function getWizyty(event, url)
 
 
 }
+
+async function findDyzury(event, url, form_id)
+{
+    event.preventDefault()
+
+    dataArea.innerHTML = '';
+
+    let dyzur_form = document.getElementById(form_id);
+
+    url += `?data=${dyzur_form.data.value}`
+
+    try {
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        if (response.ok) {
+            let table = '<table> <thead> <tr> <th> pracownik_id </th> <th> imie </th> <th> nazwisko </th>  <th> zmiana</th>   <th> oddział </th></tr> </thead> <tbody>';
+            for (let el of result) {
+                table += '<tr>'
+                for (const key in el) {
+                    if (key === 'data') {
+                        continue;
+                    } else {
+                        table += `<td> ${el[key]} </td>`
+                    }
+                }
+
+                table += '</tr>'
+            }
+
+            dataArea.innerHTML = table;
+
+
+        } else {
+            alert(result.error || 'Wystąpił błąd.');
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+        alert('Wystąpił błąd sieci.');
+    }
+
+}
+
+async function findStatsForLekarz(event, url, form_id)
+{
+    event.preventDefault();
+
+    const input = document.querySelector(` #${form_id} > #monthYear`);
+
+    const [year, month] = input.value.split('-');
+
+    url += `?rok=${year}&miesiac=${month}`
+
+    try {
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        console.log(result)
+        if (response.ok) {
+            let table = '<table> <thead> <tr> <th> imie </th> <th> nazwisko </th> <th> ilosc_wizyt </th> </tr> </thead> <tbody>';
+            for (let el of result) {
+                table += '<tr>'
+                for (const key in el) {
+                    if (key === 'data') {
+                        continue;
+                    } else {
+                        table += `<td> ${el[key]} </td>`
+                    }
+                }
+
+                table += '</tr>'
+            }
+
+            dataArea.innerHTML = table;
+
+
+        } else {
+            alert(result.error || 'Wystąpił błąd.');
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+        alert('Wystąpił błąd sieci.');
+    }  
+}

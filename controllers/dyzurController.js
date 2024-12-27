@@ -2,7 +2,7 @@ const pool = require('../model/model');
 
 const getForLekarz = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_lekarze($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.api_dyzury_lekarze($1) ORDER BY zmiana desc`, [req.query.data]);
         let rows = result.rows
         res.send(rows)
     }
@@ -16,7 +16,7 @@ const getForLekarz = async (req, res) => {
 
 const getForPieleg = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT * FROM proj.api_dyzury_pieleg($1)`, [req.query.data]);
+        const result = await pool.query(`SELECT * FROM proj.api_dyzury_pieleg($1) ORDER BY zmiana desc`, [req.query.data]);
         let rows = result.rows
         res.send(rows)
     }

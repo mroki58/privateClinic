@@ -93,6 +93,8 @@ async function getLekarzForWizyta(){
 
 function showFormForDyzur(form_id)
 {
+    dataArea.innerHTML = ''
+
     form.style.display = 'none';
     form = document.getElementById(form_id);
     form.style.display = "block";
@@ -115,7 +117,7 @@ function showFormForDyzur(form_id)
         })
 
 
-    let table = '<table> <thead> <tr> <th> dyzur_id </th> <th> data </th> <th> zmiana </th> </tr> <tbody>';
+    let table = '<table> <thead> <tr> <th> dyzur_id </th> <th> data </th> <th> zmiana </th> </tr> </thead>   <tbody>';
     getDyzury()
     .then(dyzury => {
         for(let dyzur of dyzury)
@@ -125,6 +127,8 @@ function showFormForDyzur(form_id)
             table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${data.toISOString().slice(0, 10)}</td> <td> ${dyzur.zmiana}</td> </tr>`
         }
         table += '</tbody> </table>'
+
+        console.log(table);
 
         dataArea.innerHTML = table;
     })

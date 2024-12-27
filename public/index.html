@@ -27,9 +27,15 @@
         <button onclick="showFormForWizyta('formWizyta')">Dodaj nową wizytę </button> <br />
         <h5>Wyszukiwanie danych</h5>
         <hr>
+        <span style="font-size: 11px;"> Przydatne przy tworzeniu nowej wizyty</span>
         <button onclick="showFormForWizyta('findPacjent')"> Informacje o pacjentach </button> <br />
         <button onclick="getLekarz(event, '/api/wizyta')"> Lekarz dla rodzaju wizyty </button> <br />
         <button onclick="showForm('findWizytyForLekarz')"> Wizyty dla lekarza z dnia</button>
+        <hr>
+        <button onclick="showForm('findDyzuryLekarz')"> Dyżury lekarzy </button>
+        <button onclick="showForm('findDyzuryPielegniarz')"> Dyżury pielęgniarzy </button>
+        <hr>
+        <button onclick="showForm('findStatsForLekarz')"> Statystyki dla lekarzy </button>
 
         
     </nav>
@@ -314,11 +320,37 @@
                 <input type="date" id="data" name="data" required>
                 <br>
 
-                <label for="nazwisko">Nazwisko pacjenta(lub jego fragment):</label>
+                <label for="nazwisko">Nazwisko lekarza(lub jego fragment):</label>
                 <input type="text" id="nazwisko" name="nazwisko" required>
                 <br>
 
-                <button type="submit">Wyszukaj pacjenta</button>
+                <button type="submit">Wyszukaj wizyty</button>
+            </form>
+
+            <form id="findDyzuryLekarz" onsubmit="findDyzury(event, '/api/dyzur/lekarz', 'findDyzuryLekarz') " style="display: none;">
+                <h2> Wyszukaj dyżury lekarzy </h2>
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <br>
+
+                <button type="submit">Wyszukaj dyżury</button>
+            </form>
+
+            <form id="findDyzuryPielegniarz" onsubmit="findDyzury(event, '/api/dyzur/pieleg', 'findDyzuryPielegniarz')" style="display: none;">
+                <h2> Wyszukaj dyżury pielęgniarzy </h2>
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <br>
+
+                <button type="submit">Wyszukaj dyżury</button>
+            </form>
+
+            <form id="findStatsForLekarz" onsubmit="findStatsForLekarz(event, '/api/lekarz/stats', 'findStatsForLekarz')" style="display: none;">
+                <label for="monthYear">Miesiąc: </label>
+                <input type="month" id="monthYear" name="monthYear" required>
+                <br>
+
+                <button type="submit">Pobierz informacje</button>
             </form>
        
         </div>
