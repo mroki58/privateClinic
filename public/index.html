@@ -25,9 +25,11 @@
         <hr>
         <button onclick="showForm('formWizytaRodzaj', true)">Dodaj rodzaj wizyty </button> <br />
         <button onclick="showFormForWizyta('formWizyta')">Dodaj nową wizytę </button> <br />
-
-
-
+        <h5>Wyszukiwanie danych</h5>
+        <hr>
+        <button onclick="showFormForWizyta('findPacjent')"> Informacje o pacjentach </button> <br />
+        <button onclick="getLekarz(event, '/api/wizyta')"> Lekarz dla rodzaju wizyty </button> <br />
+        <button onclick="showForm('findWizytyForLekarz')"> Wizyty dla lekarza z dnia</button>
 
         
     </nav>
@@ -266,14 +268,6 @@
                 <button type="submit">Dodaj rodzaj wizyty</button>
             </form>
 
-            <!--  
-            <form id="findPacjent" onsubmit="getPacjent(event, '/api/pacjent')" style="display: none;">
-                <label for="nazwisko">Nazwisko pacjenta(lub jego fragment):</label>
-                <input type="text" id="nazwisko" name="nazwisko" required>
-                <br>
-                <button type="submit">Wyszukaj pacjenta</button>
-                <br>
-            </form> -->
 
             <form id="formWizyta" onsubmit="submitForm(event, '/api/wizyta/nowa')" style="display: none;">
                 <label for="pacjent_id">ID pacjenta:</label>
@@ -290,8 +284,11 @@
                 </select>
                 <br>
 
-                <label for="rodzaj_wizyty_id">ID rodzaju wizyty:</label>
-                <input type="number" id="rodzaj_wizyty_id" name="rodzaj_wizyty_id" required>
+                <label for="rodzaj_wizyty_id">Rodzaj wizyty:</label>
+
+                <select id="rodzaj_wizyty_id" name="rodzaj_wizyty_id" required>
+
+                </select>
                 <br>
 
                 <label for="lekarz_id">ID lekarza:</label>
@@ -299,6 +296,29 @@
                 <br>
 
                 <button type="submit">Zapisz wizytę</button>
+            </form>
+
+ 
+            <form id="findPacjent" onsubmit="getPacjent(event, '/api/pacjent')" style="display: none;">
+                <label for="nazwisko">Nazwisko pacjenta(lub jego fragment):</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+                <br>
+                <button type="submit">Wyszukaj pacjenta</button>
+                <br>
+            </form>
+
+
+
+            <form id="findWizytyForLekarz" onsubmit = "getWizyty(event, '/api/wizyta/lekarz')" style="display: none;">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <br>
+
+                <label for="nazwisko">Nazwisko pacjenta(lub jego fragment):</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+                <br>
+
+                <button type="submit">Wyszukaj pacjenta</button>
             </form>
        
         </div>

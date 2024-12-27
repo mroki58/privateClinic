@@ -18,11 +18,31 @@ function showFormForWizyta(form_id) {
             godzina_select.appendChild(opcja);
         }
     }
+
+    fetch('/api/wizyta/rodzaj')
+    .then(res => res.json())
+    .then(res => {
+
+        console.log(res)
+
+        let rw_select = document.querySelector(` #${form_id} > #rodzaj_wizyty_id`)
+        let options = ''
+
+        for(let el of res)
+        {
+            options += `<option value="${el.rodzaj_wizyty_id}"> ${el.opis} </option>`
+        }
+
+        rw_select.innerHTML = options
+        
+    })
 }
 
 // przyda sie jeszcze
 async function getPacjent(event, url) {
     event.preventDefault(); // Zatrzymuje przeładowanie strony
+
+    dataArea.innerHTML = '';
 
     let pacjent_form = document.getElementById('findPacjent');
 
@@ -34,12 +54,20 @@ async function getPacjent(event, url) {
         const result = await response.json();
         
         if (response.ok) {
-            let ans = ''
-            for(let el of result)
+            let table = '<table> <thead> <tr> <th> pacjent_id </th> <th> imie </th> <th> nazwisko </th> <th> nr_telefonu </th>  <th> ulica </th> </tr> </thead> <tbody>';
+            for(let pacjent of result)
             {
-                ans += JSON.stringify(el) + '\n';
+                table += '<tr>'
+                for(const key in pacjent)
+                {
+                    table += `<td> ${pacjent[key]} </td>`
+                }
+                
+                table += '</tr>'
             }
-            alert(ans);
+
+            dataArea.innerHTML = table;
+
 
         } else {
             alert(result.error || 'Wystąpił błąd.');
@@ -48,4 +76,74 @@ async function getPacjent(event, url) {
         console.error('Błąd sieci:', error);
         alert('Wystąpił błąd sieci.');
     }
+}
+
+async function getLekarz(event, url)
+{
+    event.preventDefault()
+
+    form.style.display = 'none';
+    dataArea.innerHTML = ''
+
+    getLekarzForWizyta()
+        .then(res => {
+            ans = '<list>'
+            for(let el of res)
+            {
+                for(const key in el)
+                {
+                    if(key !== 'rodzaj_wizyty_id')
+                    ans += `<li> ${el[key]} </li>`
+                }
+                ans += '<hr>'
+            }
+            ans += '</list>'
+            dataArea.innerHTML = ans;
+        })
+
+} 
+
+async function getWizyty(event, url)
+{
+    event.preventDefault(); 
+
+    dataArea.innerHTML = '';
+
+    let wizyta_form = document.getElementById('findWizytyForLekarz');
+
+    url += `?data=${wizyta_form.data.value}&nazwisko=${wizyta_form.nazwisko.value}`
+
+    try {
+        const response = await fetch(url);
+
+        const result = await response.json();
+
+        if (response.ok) {
+            let table = '<table> <thead> <tr> <th> wizyta </th> <th> godzina </th> <th> lekarz_id </th>  <th> nazwisko </th> </tr> </thead> <tbody>';
+            for (let el of result) {
+                table += '<tr>'
+                for (const key in el) {
+                    if(key === 'data')
+                    {
+                        continue;
+                    }else{
+                        table += `<td> ${el[key]} </td>`
+                    }
+                }
+
+                table += '</tr>'
+            }
+
+            dataArea.innerHTML = table;
+
+
+        } else {
+            alert(result.error || 'Wystąpił błąd.');
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+        alert('Wystąpił błąd sieci.');
+    }
+
+
 }

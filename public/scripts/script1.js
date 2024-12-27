@@ -9,6 +9,7 @@ function showForm(form_id, oddzialy = false)
 {
     dataArea.innerHTML = '';
     // usuwa poprzedni formularz i wstawia nowy
+
     form.style.display = 'none';
     form = document.getElementById(form_id);
     form.style.display = "block";
@@ -84,6 +85,12 @@ async function getOddzialy(){
         .then(res => res.json())
 }
 
+async function getLekarzForWizyta(){
+    return fetch('/api/wizyta')
+        .then(res => res.json())
+}
+
+
 function showFormForDyzur(form_id)
 {
     form.style.display = 'none';
@@ -113,7 +120,7 @@ function showFormForDyzur(form_id)
     .then(dyzury => {
         for(let dyzur of dyzury)
         {
-            const data = new Date(dyzur.data.split('T')[0]); // Tworzymy obiekt Date z stringa
+            const data = new Date(dyzur.data.split('T')[0]); 
             data.setDate(data.getDate() + 1);
             table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${data.toISOString().slice(0, 10)}</td> <td> ${dyzur.zmiana}</td> </tr>`
         }
