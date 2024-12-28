@@ -13,12 +13,18 @@ const { getOddzialy,
         postPacjent,
         getPracownicy,
         getStatsForOddzial,
+        putOrdynator,
+        putOddzialowy,
 } 
         = require('../controllers/controller');
 
 
 router.get('/oddzial', getOddzialy); 
 router.post('/oddzial', postOddzial);
+
+router.put('/oddzial/ordynator', putOrdynator);
+router.put('/oddzial/oddzialowy', putOddzialowy);
+
 
 router.get('/oddzial/stats', getStatsForOddzial)
 
@@ -33,8 +39,6 @@ router.use('/wizyta', wizytaRouter);
 router.use('/dyzur', dyzurRouter);
 
 router.get('/pracownicy', getPracownicy)
-
-
 
 
 module.exports = router;

@@ -1,6 +1,6 @@
 // tutaj beda dla potrzebne funkcje dla posta do zapisywania wizyty
 
-function showFormForWizyta(form_id) {
+function showFormForWizyta(form_id, get_rw = false) {
     dataArea.innerHTML = '';
     // usuwa poprzedni formularz i wstawia nowy
     form.style.display = 'none';
@@ -19,23 +19,26 @@ function showFormForWizyta(form_id) {
         }
     }
 
-    fetch('/api/wizyta/rodzaj')
-    .then(res => res.json())
-    .then(res => {
+    if(get_rw)
+    {
+        fetch('/api/wizyta/rodzaj')
+        .then(res => res.json())
+        .then(res => {
 
-        console.log(res)
+            console.log(res)
 
-        let rw_select = document.querySelector(` #${form_id} > #rodzaj_wizyty_id`)
-        let options = ''
+            let rw_select = document.querySelector(` #${form_id} > #rodzaj_wizyty_id`)
+            let options = ''
 
-        for(let el of res)
-        {
-            options += `<option value="${el.rodzaj_wizyty_id}"> ${el.opis} </option>`
-        }
+            for(let el of res)
+            {
+                options += `<option value="${el.rodzaj_wizyty_id}"> ${el.opis} </option>`
+            }
 
-        rw_select.innerHTML = options
-        
-    })
+            rw_select.innerHTML = options
+            
+        })
+    }
 }
 
 // przyda sie jeszcze
@@ -119,7 +122,7 @@ async function getWizyty(event, url)
         const result = await response.json();
 
         if (response.ok) {
-            let table = '<table> <thead> <tr> <th> wizyta </th> <th> godzina </th> <th> lekarz_id </th>  <th> nazwisko </th> </tr> </thead> <tbody>';
+            let table = '<table> <thead> <tr> <th> wizyta </th> <th> godzina </th> <th> lekarz_id </th>  <th> lekarz </th> <th> nr_tel_pacjent </th> </tr> </thead> <tbody>';
             for (let el of result) {
                 table += '<tr>'
                 for (const key in el) {

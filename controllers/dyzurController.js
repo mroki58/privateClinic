@@ -10,7 +10,7 @@ const getForLekarz = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -24,7 +24,7 @@ const getForPieleg = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -40,7 +40,7 @@ const postNewDyzur = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
     
 }
@@ -57,7 +57,7 @@ const postNewPracownikOnDyzur = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -89,7 +89,43 @@ const getDyzury = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
+    }
+}
+
+const changePracownikOnDyzur = async (req, res) => {
+    try {
+        const { data, zmiana, pracownik_id, nowy_pracownik_id  } = req.body;
+        const values = [data, zmiana, pracownik_id, nowy_pracownik_id];
+
+        const result = await pool.query(`UPDATE pracownik_dyzur SET pracownik_id = $4 WHERE dyzur_id = (SELECT dyzur_id FROM dyzur WHERE data = $1 AND zmiana = $2) AND pracownik_id = $3 RETURNING *`, values);
+        res.send({ error: 'Zmieniono pracownika dla dyżuru' });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message });
+    }
+}
+
+const deletePracownikFromDyzur = async (req, res) => {
+    try {
+        const { data, zmiana, pracownik_id } = req.body;
+        const values = [data, zmiana ,pracownik_id];
+
+        const result = await pool.query(`DELETE FROM pracownik_dyzur WHERE dyzur_id = (SELECT dyzur_id FROM dyzur WHERE data = $1 AND zmiana = $2) AND pracownik_id = $3 RETURNING *`, values);
+        if(result.rowCount > 0)
+            res.send({ error: 'Usunięto pracownika z dyżuru' });
+        else
+            res.send({ error: 'Nie było takiego pracownika na dyżurze' });
+
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -99,4 +135,6 @@ module.exports = {
     postNewDyzur,
     postNewPracownikOnDyzur,
     getDyzury,
+    changePracownikOnDyzur,
+    deletePracownikFromDyzur,
 }

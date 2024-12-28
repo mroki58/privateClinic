@@ -89,16 +89,17 @@ select * from api_dyzury_pieleg('20-01-2025');
 
 -- zwraca wizyty dla lekarza z danej daty
 create or replace function api_wizyty_lekarze(DATE, TEXT)
-RETURNS TABLE(wizyta TEXT, data DATE, godzina TIME, pracownik_id INT, nazwisko text) as
+RETURNS TABLE(wizyta TEXT, data DATE, godzina TIME, pracownik_id INT, lekarz text, pacjent_nr_tel VARCHAR(12)) as
 $$
 BEGIN
 
 	return query
-	select rw.opis as wizyta, w.data as data, w.godzina as godzina, p.pracownik_id, p.nazwisko 
+	select rw.opis as wizyta, w.data as data, w.godzina as godzina, p.pracownik_id, CONCAT(p.imie, ' ', p.nazwisko), pa.nr_telefonu  
 							from proj.wizyta w 
 								join proj.rodzaj_wizyty rw USING(rodzaj_wizyty_id)
 								join proj.lekarz l USING(lekarz_id) 
 								join proj.pracownik p on p.pracownik_id = l.lekarz_id
+								join pacjent pa USING(pacjent_id)
 							where w.data = $1 and p.nazwisko ilike $2 || '%' ;
 					
 end;

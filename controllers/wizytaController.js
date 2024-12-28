@@ -10,7 +10,7 @@ const getLekarzForRodzaj = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -24,7 +24,7 @@ const getLekarzForWizyta = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -38,11 +38,11 @@ const getRodzaj = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
-const postRodzaj =  async(req, res) => {
+const postRodzaj =  async (req, res) => {
     try {
         const {opis, cena, oddzial_id} = req.body;
         const values = [opis, cena, oddzial_id]
@@ -54,11 +54,11 @@ const postRodzaj =  async(req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
-const postNowaWizyta = async(req, res) => {
+const postNowaWizyta = async (req, res) => {
     try {
         const { pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id } = req.body;
         const values = [pacjent_id, data, godzina, rodzaj_wizyty_id, lekarz_id]
@@ -70,8 +70,28 @@ const postNowaWizyta = async(req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }    
+}
+
+// wystarczy godzina i data aby usunąć wizytę
+const deleteWizyta = async (req, res) => {
+    try {
+        const { data, godzina } = req.body;
+        const values = [data, godzina]
+
+        const result = await pool.query(`DELETE FROM wizyta WHERE data = $1 AND godzina = $2 RETURNING *`, values);
+        if(result.rowCount > 0)
+            res.send({ error: "Wizyta została usunięta!" });
+        else
+            res.send({ error: "Nie istniała wizyta o tej godzinie!!!" });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message, details: err.message });
+    }
 }
 
 
@@ -81,4 +101,5 @@ module.exports = {
     getRodzaj,
     postRodzaj,
     postNowaWizyta,
+    deleteWizyta
 }

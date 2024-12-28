@@ -79,7 +79,7 @@ BEGIN
 	IF OLD.ordynator <> NEW.ordynator THEN
 		SELECT * INTO rec FROM lekarz WHERE lekarz_id = NEW.ordynator;
 		IF NOT EXISTS(SELECT 1 FROM lekarz WHERE oddzial_id = OLD.oddzial_id AND lekarz_id = NEW.ordynator) THEN
-			RAISE EXCEPTION 'Zly oddzial';
+			RAISE EXCEPTION 'Próba dodania pielęgniarza jako ordynatora';
 			RETURN NULL; 
 		END IF;
 	END IF;
@@ -88,7 +88,7 @@ BEGIN
 	IF OLD.oddzialowy <> NEW.oddzialowy THEN
 		SELECT * INTO rec FROM pielegniarz WHERE pielegniarz_id = NEW.oddzialowy;
 		IF NOT EXISTS(SELECT 1 FROM pielegniarz WHERE oddzial_id = OLD.oddzial_id AND pielegniarz_id = NEW.oddzialowy) THEN
-			RAISE EXCEPTION 'Zly oddzial';
+			RAISE EXCEPTION 'Próba dodania lekarza jako oddziałowego';
 			RETURN NULL;
 		END IF;
 	END IF;

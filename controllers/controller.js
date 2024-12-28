@@ -10,7 +10,7 @@ const getOddzialy = async (req,res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -25,7 +25,7 @@ const getPacjenci = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -40,7 +40,7 @@ const getPieleg = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -57,7 +57,7 @@ const postPieleg = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -75,7 +75,7 @@ const postOddzial = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -91,7 +91,7 @@ const postPacjent = async (req,res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -100,7 +100,8 @@ const getPracownicy = async (req, res) => {
     try {
         const result = await pool.query(`SELECT pracownik_id, CONCAT(imie,' ',nazwisko) AS imie_nazwisko, 
                     (CASE WHEN lekarz_id IS NOT NULL THEN 'Lekarz' WHEN pielegniarz_id IS NOT NULL THEN 'Pielegniarz' ELSE 'Inne' END) as typ,
-                    (CASE WHEN lekarz_id IS NOT NULL THEN o1.nazwa WHEN pielegniarz_id IS NOT NULL THEN o2.nazwa ELSE 'Inne' END) as oddzial
+                    (CASE WHEN lekarz_id IS NOT NULL THEN o1.nazwa WHEN pielegniarz_id IS NOT NULL THEN o2.nazwa ELSE 'Inne' END) as oddzial,
+                    (CASE WHEN lekarz_id IS NOT NULL THEN o1.oddzial_id WHEN pielegniarz_id IS NOT NULL THEN o2.oddzial_id ELSE NULL END) as oddzial_id
                                 FROM pracownik p
                                     LEFT JOIN lekarz l ON pracownik_id = lekarz_id
                                     LEFT JOIN pielegniarz pi ON pracownik_id = pielegniarz_id
@@ -113,7 +114,7 @@ const getPracownicy = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 }
 
@@ -127,9 +128,41 @@ const getStatsForOddzial = async (req, res) => {
         if (err.code === 'P0001') {
             return res.status(400).send({ error: err.message });
         }
-        return res.status(500).send({ error: 'Database error', details: err.message });
+        return res.status(500).send({ error: err.message, details: err.message });
     }
 
+}
+
+const putOrdynator = async (req, res) => {
+    try {
+        const { pracownik_id, oddzial_id } = req.body;
+        const values = [pracownik_id, oddzial_id];
+
+        const result = await pool.query(`UPDATE oddzial SET ordynator = $1 WHERE oddzial_id = $2`, values);
+        res.send({ error: 'Zmieniono ordynatora!' });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message, details: err.message });
+    }
+}
+
+const putOddzialowy = async (req, res) => {
+    try {
+        const { pracownik_id, oddzial_id } = req.body;
+        const values = [pracownik_id, oddzial_id];
+
+        const result = await pool.query(`UPDATE oddzial SET oddzialowy = $1 WHERE oddzial_id = $2`, values);
+        res.send({ error: 'Zmieniono oddzialowego!' });
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message, details: err.message });
+    }
 }
 
 
@@ -144,4 +177,6 @@ module.exports = {  getOddzialy,
                     postPacjent,
                     getPracownicy,
                     getStatsForOddzial,
+                    putOrdynator,
+                    putOddzialowy,
                 };

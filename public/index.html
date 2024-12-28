@@ -28,7 +28,7 @@
         <h5>Wyszukiwanie danych</h5>
         <hr>
         <span style="font-size: 11px;"> Przydatne przy tworzeniu nowej wizyty</span>
-        <button onclick="showFormForWizyta('findPacjent')"> Informacje o pacjentach </button> <br />
+        <button onclick="showFormForWizyta('findPacjent', true)"> Informacje o pacjentach </button> <br />
         <button onclick="getLekarz(event, '/api/wizyta')"> Lekarz dla rodzaju wizyty </button> <br />
         <button onclick="showForm('findWizytyForLekarz')"> Wizyty dla lekarza z dnia</button>
         <hr>
@@ -37,6 +37,18 @@
         <hr>
         <button onclick="showForm('findStatsForLekarz')"> Statystyki dla lekarzy </button>
         <button onclick="showForm('findStatsForOddzial', true)">Przychody dla oddziałów</button>
+        <hr>
+        <h5>Zmiana danych lub ich usunięcie</h5>
+        <hr>
+        <button onclick="showFormForZamiana('changePracownikOnDyzur')">Zmień pracownika na dyżurze</button>
+        <button onclick="showFormForZamiana('deletePracownikOnDyzur')">Usuń pracownika z dyżuru </button>
+        <hr>
+        <button onclick="showFormForWizyta('deleteWizyta')"> Anuluj wizytę </button>
+        <hr>
+        <button onclick="showFormForChief('changeOrdynator')">Zmień ordynatora</button> <br />
+        <button onclick="showFormForChief('changeOddzialowy')">Zmień oddziałowego</button> <br />
+
+
 
         
     </nav>
@@ -360,8 +372,129 @@
             </select>
             <br>
             <button type="submit">Pobierz informacje</button>
-
         </form>
+
+        <form id="changePracownikOnDyzur" onsubmit="putPracownikOnDyzur(event, '/api/dyzur/pracownik', 'changePracownikOnDyzur')" style="display: none;">
+            <label for="oddzial_id">Oddział: </label>
+            <select id="oddzial_id" name="oddzial_id" required>
+            
+            </select>
+            <br>
+
+            <label for="pracownik_id">Poprzedni pracownik:</label>
+            <select id="pracownik_id" name="pracownik_id" required>
+            
+            </select>
+            <br>
+
+            <label for="nowy_pracownik_id">Nowy pracownik:</label>
+            <select id="nowy_pracownik_id" name="nowy_pracownik_id" required>
+            
+            </select>
+            <br>
+
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <br>
+
+            <label for="zmiana">Zmiana:</label>
+            <select id="zmiana" name="zmiana" required>
+                <option value="R">Ranna</option>
+                <option value="D">Dzienna</option>
+            </select>
+            <br>
+
+            <button type="submit">Zamień</button>
+ 
+        </form>
+
+        <form id="deletePracownikOnDyzur" onsubmit="deletePracownikOnDyzur(event, '/api/dyzur/pracownik', 'deletePracownikOnDyzur')" style="display: none;">
+            <label for="oddzial_id">Oddział: </label>
+            <select id="oddzial_id" name="oddzial_id" required>
+        
+            </select>
+            <br>
+        
+            <label for="pracownik_id">Poprzedni pracownik:</label>
+            <select id="pracownik_id" name="pracownik_id" required>
+        
+            </select>
+            <br>
+                
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <br>
+        
+            <label for="zmiana">Zmiana:</label>
+            <select id="zmiana" name="zmiana" required>
+                <option value="R">Ranna</option>
+                <option value="D">Dzienna</option>
+            </select>
+            <br>
+        
+            <button type="submit">Usuń</button>
+            <br>
+            <span style="font-size: 11px;"> Usunięcie kogoś z dyżuru powoduję usunięcie wizyt dla danej osoby w tym dniu! Jeśli nie jest to w twoim planie przemyśl zamianę!</span>
+
+        
+        </form>
+
+        <form id="deleteWizyta" onsubmit="deletePracownikOnDyzur(event, '/api/wizyta', 'deleteWizyta')" style="display: none;">
+    
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <br>
+        
+            <label for="godzina">Godzina:</label>
+            <select id="godzina" name="godzina" required>
+
+            </select>
+            <br>
+        
+            <button type="submit">Usuń</button>
+            <br>
+            <span style="font-size: 11px;"> Przed usunięciem wizyty powinno się sprawdzić poprawność wszystkich danych!</span>
+           
+        </form>
+
+        <form id="changeOrdynator" onsubmit="putChief(event, '/api/oddzial/ordynator', 'changeOrdynator')" style="display: none;">
+            <h2>Zmień ordynatora</h2> <br>
+            <label for="oddzial_id">Oddział: </label>
+            <select id="oddzial_id" name="oddzial_id" required>
+            
+            </select>
+            <br>
+            
+            
+            <label for="pracownik_id">Pracownik:</label>
+            <select id="pracownik_id" name="pracownik_id" required>
+            
+            </select>
+            <br>
+            
+            <button type="submit">Zmień</button>
+        </form>
+
+        <form id="changeOddzialowy" onsubmit="putChief(event, '/api/oddzial/oddzialowy', 'changeOddzialowy')" style="display: none;">
+            <h2>Zmień oddziałowego</h2> <br>
+            <label for="oddzial_id">Oddział: </label>
+            <select id="oddzial_id" name="oddzial_id" required>
+        
+            </select>
+            <br>
+        
+        
+            <label for="pracownik_id">Pracownik:</label>
+            <select id="pracownik_id" name="pracownik_id" required>
+        
+            </select>
+            <br>
+        
+            <button type="submit">Zmień</button>
+        </form>
+
+
+
         </div>
 
         
@@ -371,9 +504,12 @@
         </div>
     </main>
 
-    <aside class="pageAside">
 
+
+    <aside class="pageAside">
+        <textarea style="width: 100%; height: 100%; border: none; resize: none; background-color: #eeeeee;">Miejsce na notatki</textarea>
     </aside>
+
 
     <footer class="pageFooter">
         Autor: Igor Sala &#169
@@ -382,6 +518,7 @@
     <!-- Skrypty po zaladowaniu -->
     <script src="scripts/script1.js"></script>
     <script src="scripts/script2.js"></script>
+    <script src="scripts/script3.js"></script>
 
 
 </body>
