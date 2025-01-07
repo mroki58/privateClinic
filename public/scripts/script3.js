@@ -105,6 +105,39 @@ async function deletePracownikOnDyzur(event, url, form_id) {
     }
 }
 
+async function deleteWizyta(event, url, form_id) {
+    event.preventDefault();
+
+    let form = document.getElementById(form_id);
+
+    data = {
+        "data": form.data.value,
+        "godzina": form.godzina.value,
+    }
+
+    console.log(data)
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.error || 'Dane dodane pomyślnie!');
+        } else {
+            alert(result.error || 'Wystąpił błąd.');
+        }
+    } catch (error) {
+        console.error('Błąd sieci:', error);
+        alert('Wystąpił błąd sieci.');
+    }
+}
+
 function showFormForChief(form_id) {
     showForm(form_id);
 

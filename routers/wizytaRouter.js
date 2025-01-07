@@ -6,7 +6,8 @@ const {
     getLekarzForWizyta,
     getRodzaj,
     postRodzaj,
-    postNowaWizyta
+    postNowaWizyta,
+    deleteWizyta,
 }
     = require('../controllers/wizytaController');
 
@@ -17,4 +18,5 @@ wizytaRouter.get('/rodzaj', getRodzaj);
 wizytaRouter.post('/rodzaj', postRodzaj);
 wizytaRouter.post('/nowa', postNowaWizyta);
 
+wizytaRouter.delete('/', deleteWizyta);
 module.exports = wizytaRouter;

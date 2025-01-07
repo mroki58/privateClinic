@@ -95,6 +95,7 @@ const deleteWizyta = async (req, res) => {
 }
 
 
+
 module.exports = {
     getLekarzForRodzaj,
     getLekarzForWizyta,
