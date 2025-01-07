@@ -165,6 +165,20 @@ const putOddzialowy = async (req, res) => {
     }
 }
 
+const getKosztyForOddzialy = async(req,res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM koszty_dla_oddzialow_view`);
+        let rows = result.rows
+        res.send(rows)
+    }
+    catch (err) {
+        if (err.code === 'P0001') {
+            return res.status(400).send({ error: err.message });
+        }
+        return res.status(500).send({ error: err.message, details: err.message });
+    }
+}
+
 
 
 
@@ -179,4 +193,5 @@ module.exports = {  getOddzialy,
                     getStatsForOddzial,
                     putOrdynator,
                     putOddzialowy,
+                    getKosztyForOddzialy,
                 };

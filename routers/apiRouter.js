@@ -15,6 +15,7 @@ const { getOddzialy,
         getStatsForOddzial,
         putOrdynator,
         putOddzialowy,
+        getKosztyForOddzialy,
 } 
         = require('../controllers/controller');
 
@@ -26,7 +27,8 @@ router.put('/oddzial/ordynator', putOrdynator);
 router.put('/oddzial/oddzialowy', putOddzialowy);
 
 
-router.get('/oddzial/stats', getStatsForOddzial)
+router.get('/oddzial/stats', getStatsForOddzial);
+router.get('/oddzial/costs', getKosztyForOddzialy);
 
 router.get('/pacjent', getPacjenci);
 router.post('/pacjent', postPacjent);

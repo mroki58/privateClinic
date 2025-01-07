@@ -129,3 +129,28 @@ select extract(year from w.data)::INTEGER as rok,extract(month from w.data)::INT
 	group by cube (rok, miesiac)
 	order by rok, miesiac;
 
+
+-- Wypisuje oddziały, gdzie suma płac jest większa niż 20000
+create view koszty_dla_oddzialow_view as
+select o.nazwa , sum(p.pensja) as suma_pensji from pracownik p
+			left join lekarz l on p.pracownik_id = l.lekarz_id
+			left join pielegniarz pi on p.pracownik_id = pi.pielegniarz_id
+			join oddzial o on o.oddzial_id = (case when l.oddzial_id is not null then l.oddzial_id else pi.oddzial_id END) 
+		group by o.oddzial_id, o.nazwa
+	having sum(p.pensja) > 20000 
+	order by suma_pensji desc;
+
+select * from koszty_dla_oddzialow_view;
+	
+
+			
+
+
+
+
+
+
+
+
+
+
