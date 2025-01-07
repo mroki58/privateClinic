@@ -106,6 +106,27 @@ async function getLekarz(event, url)
 
 } 
 
+async function getCosts(event, url)
+{
+    event.preventDefault(); 
+
+    form.style.display = 'none';
+    dataArea.innerHTML = '';
+    fetch("/api/oddzial/costs")
+    .then(res => res.json())
+    .then(res => {
+        ans = '<list>'
+        for (let el of res) {
+            
+            ans += `<li> ${el.nazwa} ${el.suma_pensji} </li>`
+            ans += '<hr>'
+        }
+        ans += '</list>'
+        dataArea.innerHTML = ans;
+    })
+
+}
+
 async function getWizyty(event, url)
 {
     event.preventDefault(); 
