@@ -122,13 +122,12 @@ function showFormForDyzur(form_id)
     .then(dyzury => {
         for(let dyzur of dyzury)
         {
+            console.log(dyzur);
             const data = new Date(dyzur.data.split('T')[0]); 
             data.setDate(data.getDate() + 1);
-            table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${data.toISOString().slice(0, 10)}</td> <td> ${dyzur.zmiana}</td> </tr>`
+            table += `<tr><td> ${dyzur.dyzur_id}</td> <td>${data.toISOString().slice(0, 10)}</td> <td> ${dyzur.zmiana_id == 1 ? "Ranna": "Dzienna"}</td> </tr>`
         }
         table += '</tbody> </table>'
-
-        console.log(table);
 
         dataArea.innerHTML = table;
     })

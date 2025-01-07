@@ -11,22 +11,32 @@ create table pracownik(pracownik_id SERIAL primary KEY, imie text not null, nazw
 	pensja numeric(7,2) not null, wyksztalcenie text not null, nr_telefonu VARCHAR(12) );
 	
 
+create table zmiana(zmiana_id smallint UNIQUE,
+					opis TEXT);
+				
+insert into zmiana(opis) VALUES(1, 'Ranna');
+insert into zmiana(opis) values(2, 'Dzienna');
+
 -- zmiana dzienna(d) lub ranna(r)
 -- dyzur sluzy tylko jako plan na przyszłe tygodnie
 -- dlatego bedziemy je usuwac z czasem (po tygodniu albo cos)
 create table dyzur(dyzur_id SERIAL primary key, 
 					data DATE not null, 
-					zmiana VARCHAR(1),
-					unique(data, zmiana));
+					zmiana_id smallint not null references zmiana(zmiana_id),
+					unique(data, zmiana_id));
 				
 -- tablica z której potencjalnie coś chcemy usuwać w przypadku usunięcia dyżuru
 create table pracownik_dyzur(dyzur_id INT references dyzur(dyzur_id) on delete cascade ,
 							 pracownik_id INT references pracownik(pracownik_id) on delete cascade,
 							 constraint pracownik_dyzur_pk primary key(dyzur_id, pracownik_id) );
+							
+create table specjalizacja(specjalizacja_id SERIAL UNIQUE, 
+						   opis TEXT);
 			
 -- oddzial moze byc chwilowo nieprzypisany
 create table lekarz(lekarz_id INT primary key references pracownik(pracownik_id),  
-					oddzial_id INT);
+					oddzial_id INT,
+					specjalizacja_id INT references specjalizacja(specjalizacja_id));
 					
 create table pielegniarz(pielegniarz_id INT primary key references pracownik(pracownik_id),
 						oddzial_id INT);
@@ -51,8 +61,7 @@ create table rodzaj_wizyty(rodzaj_wizyty_id SERIAL primary key,
 							oddzial_id INT references oddzial(oddzial_id));
 						
 
-create table wizyta(wizyta_id SERIAL primary key,
-					pacjent_id INT not null,
+create table wizyta(pacjent_id INT not null,
 					data DATE not null,
 					godzina TIME not null,
 					rodzaj_wizyty_id INT references rodzaj_wizyty(rodzaj_wizyty_id) on delete set null,

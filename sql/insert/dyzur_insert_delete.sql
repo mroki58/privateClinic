@@ -7,8 +7,8 @@ select * from dyzur;
 
 set datestyle to european;
 
-insert into dyzur(data, zmiana) values ('20-01-2025', 'R');
-insert into dyzur(data, zmiana) values ('20-01-2025', 'D');
+insert into dyzur(data, zmiana_id) values ('20-01-2025',  1);
+insert into dyzur(data, zmiana_id) values ('20-01-2025',  2);
 
 insert into pracownik_dyzur values (1,2), (1,4);
 select * from dyzur join pracownik_dyzur using(dyzur_id);
@@ -37,7 +37,6 @@ create trigger sprawdzenie_czy_jest_dyzur before insert
 on pracownik_dyzur for each row 
 execute function sprawdz_czy_dzisiaj_zajety();
 
-insert into pracownik_dyzur values (2,2);
 insert into pracownik_dyzur values (2,3);
 select * from pracownik_dyzur;
 

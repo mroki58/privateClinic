@@ -8,7 +8,7 @@ set search_path to proj;
 
 -- widok bedzie sluzyl do wstawiania nowego lekarza
 -- wykorzystamy trigger instead of
-create view lekarz_insert_widok as select p.*, l.oddzial_id from pracownik p 
+create view lekarz_insert_widok as select p.*, l.oddzial_id, l.specjalizacja_id from pracownik p 
 join lekarz l on p.pracownik_id = l.lekarz_id; 
 
 -- widok bedzie sluzyl do wstawiania nowego pielegniarza
@@ -38,7 +38,8 @@ BEGIN
 											NEW.nr_telefonu)
 			RETURNING pracownik_id INTO id;
 			INSERT INTO lekarz values(id,	
-										NEW.oddzial_id);
+										NEW.oddzial_id,
+										NEW.specjalizacja_id);
 		ELSE 
 			INSERT INTO pracownik(imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu) values (NEW.imie, 
 											NEW.nazwisko, 
@@ -114,11 +115,13 @@ VALUES
 ('Neurologia', 2, null, NULL),
 ('Pediatria', 3, null, NULL);
 
-INSERT INTO lekarz_insert_widok (imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu, oddzial_id)
+insert into specjalizacja(opis) values ('Kardiochirurgia'), ('Neurologia'), ('Pediatria');
+
+INSERT INTO lekarz_insert_widok (imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu, oddzial_id, specjalizacja_id)
 VALUES 
-('Jan', 'Kowalski', 'M', '85010112345', 'Kraków', 'Lipowa', '10', '1', 10000.00, 'wyzsze', '987654321', 1), 
-('Tomasz', 'Zieliński', 'M', '87070123456', 'Kraków', 'Brzozowa', '22', '3', 11000.00, 'wyzsze', '987654322', 2), 
-('Marta', 'Mazur', 'K', '90030134567', 'Kraków', 'Sosnowa', '5', 'A', 9500.00, 'wyzsze', '987654323', 3);
+('Jan', 'Kowalski', 'M', '85010112345', 'Kraków', 'Lipowa', '10', '1', 10000.00, 'wyzsze', '987654321', 1, 1), 
+('Tomasz', 'Zieliński', 'M', '87070123456', 'Kraków', 'Brzozowa', '22', '3', 11000.00, 'wyzsze', '987654322', 2, 2), 
+('Marta', 'Mazur', 'K', '90030134567', 'Kraków', 'Sosnowa', '5', 'A', 9500.00, 'wyzsze', '987654323', 3, 3);
 
 INSERT INTO pielegniarz_insert_widok (imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu, oddzial_id)
 VALUES 

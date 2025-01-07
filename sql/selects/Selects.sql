@@ -52,12 +52,13 @@ select * from lekarz_dla_wizyty_view;
 
 
 -- wyswietlenie kto ma dyzur danego dnia z jakiego oddzialu dla lekarzy
-select p.pracownik_id ,p.imie, p.nazwisko, d.data, (case when d.zmiana = 'R' then 'ranna 7:00 - 15:00' else 'dzienna 15:00 - 23:00' END), o.nazwa as oddzial 
+select p.pracownik_id ,p.imie, p.nazwisko, d.data, z.opis, o.nazwa as oddzial 
 										from pracownik p 
 											join lekarz l on p.pracownik_id = l.lekarz_id
 											join oddzial o USING(oddzial_id)
 											join pracownik_dyzur pd USING(pracownik_id) 
 											join dyzur d using(dyzur_id) 
+											join zmiana z USING(zmiana_id)
 										where d.data = '20-01-2025';
 																		
 	
@@ -124,7 +125,7 @@ select extract(year from w.data)::INTEGER as rok,extract(month from w.data)::INT
 	from oddzial o 
 		join rodzaj_wizyty rw USING(oddzial_id)
 		join wizyta w USING(rodzaj_wizyty_id)
-	where o.oddzial_id = 1
+	where o.oddzial_id = 2
 	group by cube (rok, miesiac)
 	order by rok, miesiac;
 

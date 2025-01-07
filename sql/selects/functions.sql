@@ -54,12 +54,13 @@ RETURNS TABLE(pracownik_id INT, imie TEXT, nazwisko TEXT,data DATE , zmiana text
 $$
 BEGIN
 return query
-select p.pracownik_id ,p.imie, p.nazwisko, d.data, (case when d.zmiana = 'R' then 'ranna 7:00 - 15:00' else 'dzienna 15:00 - 23:00' END), o.nazwa as oddzial 
+select p.pracownik_id ,p.imie, p.nazwisko, d.data, z.opis, o.nazwa as oddzial 
 										from proj.pracownik p 
 											join proj.lekarz l on p.pracownik_id = l.lekarz_id
 											join proj.oddzial o USING(oddzial_id)
 											join proj.pracownik_dyzur pd USING(pracownik_id) 
 											join proj.dyzur d using(dyzur_id) 
+											join proj.zmiana z using(zmiana_id)
 										where d.data = $1;
 END;
 $$ language plpgsql;
@@ -74,12 +75,13 @@ RETURNS TABLE(pracownik_id INT, imie TEXT, nazwisko TEXT,data DATE , zmiana text
 $$
 BEGIN
 return query
-select p.pracownik_id ,p.imie, p.nazwisko, d.data, (case when d.zmiana = 'R' then 'ranna 7:00 - 15:00' else 'dzienna 15:00 - 23:00' END), o.nazwa as oddzial 
+select p.pracownik_id ,p.imie, p.nazwisko, d.data, z.opis, o.nazwa as oddzial 
 										from proj.pracownik p 
 											join proj.pielegniarz l on p.pracownik_id = l.pielegniarz_id
 											join proj.oddzial o USING(oddzial_id)
 											join proj.pracownik_dyzur pd USING(pracownik_id) 
-											join proj.dyzur d using(dyzur_id) 
+											join proj.dyzur d using(dyzur_id)
+											join proj.zmiana z using(zmiana_id) 
 										where d.data = $1;
 END;
 $$ language plpgsql;
@@ -158,6 +160,7 @@ BEGIN
 END;
 $$ language plpgsql;
 
-select * from api_oddzial_stats(1);
+select * from api_oddzial_stats(2);
+
 
 

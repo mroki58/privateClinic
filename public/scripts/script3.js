@@ -43,7 +43,7 @@ async function putPracownikOnDyzur(event, url, form_id)
 
     data = {
         "data": form.data.value,
-        "zmiana": form.zmiana.value,
+        "zmiana_id": form.zmiana_id.value,
         "pracownik_id": form.pracownik_id.value,
         "nowy_pracownik_id": form.nowy_pracownik_id.value,
     }
@@ -78,7 +78,7 @@ async function deletePracownikOnDyzur(event, url, form_id) {
 
     data = {
         "data": form.data.value,
-        "zmiana": form.zmiana.value,
+        "zmiana_id": form.zmiana_id.value,
         "pracownik_id": form.pracownik_id.value,
     }
 

@@ -89,8 +89,8 @@ IF NOT EXISTS (
     FROM dyzur d JOIN pracownik_dyzur pd USING(dyzur_id)
     WHERE pracownik_id = NEW.lekarz_id
       AND d.data = NEW.data
-      AND (CASE WHEN d.zmiana = 'D' AND NEW.godzina >= '15:00' THEN true
-                WHEN d.zmiana = 'R' AND NEW.godzina < '15:00' THEN true
+      AND (CASE WHEN d.zmiana_id = 2 AND NEW.godzina >= '15:00' THEN true
+                WHEN d.zmiana_id = 1 AND NEW.godzina < '15:00' THEN true
                 ELSE false END)
 ) THEN
     RAISE EXCEPTION 'Lekarz nie ma dyżuru w tym dniu lub jest na niewłaściwej zmianie.';
