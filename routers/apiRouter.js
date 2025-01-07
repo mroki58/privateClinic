@@ -3,32 +3,19 @@ const router = express.Router();
 const dyzurRouter = require('./dyzurRouter')
 const wizytaRouter = require('./wizytaRouter')
 const lekarzRouter = require('./lekarzRouter')
+const oddzialRouter = require('./oddzialRouter')
 
 
-const { getOddzialy, 
+const {
         getPacjenci,
         getPieleg,
         postPieleg,
-        postOddzial,
         postPacjent,
         getPracownicy,
-        getStatsForOddzial,
-        putOrdynator,
-        putOddzialowy,
-        getKosztyForOddzialy,
 } 
         = require('../controllers/controller');
 
 
-router.get('/oddzial', getOddzialy); 
-router.post('/oddzial', postOddzial);
-
-router.put('/oddzial/ordynator', putOrdynator);
-router.put('/oddzial/oddzialowy', putOddzialowy);
-
-
-router.get('/oddzial/stats', getStatsForOddzial);
-router.get('/oddzial/costs', getKosztyForOddzialy);
 
 router.get('/pacjent', getPacjenci);
 router.post('/pacjent', postPacjent);
@@ -39,6 +26,7 @@ router.post('/pieleg', postPieleg);
 router.use('/lekarz', lekarzRouter);
 router.use('/wizyta', wizytaRouter);
 router.use('/dyzur', dyzurRouter);
+router.use('/oddzial', oddzialRouter);
 
 router.get('/pracownicy', getPracownicy)
 
