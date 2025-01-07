@@ -5,7 +5,7 @@ let form = document.getElementById("formLekarz"); // default
 
 // wyswietla formularz usuwa poprzedni
 // jesli oddzialy sa potrzebne w nowym formularzu drugi argument musi byc true
-function showForm(form_id, oddzialy = false)
+function showForm(form_id, oddzialy = false, specjalizacje = false)
 {
     dataArea.innerHTML = '';
     // usuwa poprzedni formularz i wstawia nowy
@@ -30,6 +30,23 @@ function showForm(form_id, oddzialy = false)
             }
             oddzial_select.innerHTML = options
             
+        })
+    }
+
+    if(specjalizacje)
+    {
+        let spec_select = document.querySelector(`#${form_id} > #specjalizacja_id `)
+        fetch("/api/lekarz/spec")
+        .then(res => res.json())
+        .then(res => {
+            let options = ''
+            for (let el of res) {
+                let value = el.specjalizacja_id;
+                let name = el.opis;
+                console.log(el);
+                options += `<option value="${value}"> ${name} </option>`;
+            }
+            spec_select.innerHTML = options
         })
     }
 }

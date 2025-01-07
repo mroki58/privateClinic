@@ -16,7 +16,8 @@
         <h5>Dodawanie danych</h5>
         <hr>
         <button onclick="showForm('formPacjent')">Zarejestruj pacjenta</button> <br />
-        <button onclick="showForm('formLekarz', true)">Dodaj lekarza</button> <br/>
+        <button onclick="showForm('formSpecjalizacja')">Dodaj specjalizacje</button> <br />
+        <button onclick="showForm('formLekarz', true, true)">Dodaj lekarza</button> <br/>
         <button onclick="showForm('formPieleg', true)">Dodaj pielęgniarza</button> <br />
         <button onclick="showForm('formOddzial')">Dodaj oddział</button> <br />
         <hr>
@@ -109,6 +110,11 @@
                 <input type="text" id="nr_telefonu" name="nr_telefonu" pattern="\d{9,12}"
                     title="Podaj poprawny numer telefonu (9-12 cyfr)" required>
                 <br>
+
+                <label for="specjalizacja_id">Specjalizacja: </label>
+                <select id="specjalizacja_id" name="specjalizacja_id">
+
+                </select>
             
                 <label for="oddzial_id">Oddział:</label>
                 <select id="oddzial_id" name="oddzial_id" required>
@@ -117,6 +123,14 @@
                 <br>
             
                 <button type="submit">Dodaj lekarza</button>
+            </form>
+
+            <form id="formSpecjalizacja" onsubmit="submitForm(event, '/api/lekarz/spec')" style="display: none;">
+            <label for="opis">Opis specjalizacji: </label>
+            <input type="text" id="opis" name="opis" required>
+            
+            <button type="submit">Dodaj specjalizacje</button>
+
             </form>
 
             <form id="formPieleg" onsubmit="submitForm(event, '/api/pieleg')" style="display: none;">
