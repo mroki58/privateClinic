@@ -90,7 +90,8 @@ async function getLekarz(event, url)
 
     getLekarzForWizyta()
         .then(res => {
-            ans = '<list>'
+            ans = '<h2>Lekarze dostępni dla danego rodzaju wizyty</h2>'
+            ans += '<list>'
             for(let el of res)
             {
                 for(const key in el)
@@ -115,7 +116,8 @@ async function getCosts(event, url)
     fetch("/api/oddzial/costs")
     .then(res => res.json())
     .then(res => {
-        ans = '<list>'
+        ans = '<h2> Miesięczne koszty utrzymania oddziału (większe niż 20000) </h2>'
+        ans += '<list>'
         for (let el of res) {
             
             ans += `<li> ${el.nazwa} ${el.suma_pensji} </li>`

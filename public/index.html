@@ -59,6 +59,7 @@
         <div id="formArea">
             <!-- Dla lekarza-->
             <form id="formLekarz" onsubmit="submitForm(event, '/api/lekarz')" style="display: none;">
+                <h2>Dodaj lekarza</h2>
                 <label for="imie">Imię:</label>
                 <input type="text" id="imie" name="imie" required>
                 <br>
@@ -127,6 +128,7 @@
             </form>
 
             <form id="formSpecjalizacja" onsubmit="submitForm(event, '/api/lekarz/spec')" style="display: none;">
+            <h2>Dodaj specjalizacje</h2>
             <label for="opis">Opis specjalizacji: </label>
             <input type="text" id="opis" name="opis" required>
             
@@ -135,6 +137,7 @@
             </form>
 
             <form id="formPieleg" onsubmit="submitForm(event, '/api/pieleg')" style="display: none;">
+                <h2> Dodaj pielęgniarza</h2>
                 <label for="imie">Imię:</label>
                 <input type="text" id="imie" name="imie" required>
                 <br>
@@ -198,6 +201,7 @@
             </form>
 
             <form id="formOddzial" onsubmit="submitForm(event, '/api/oddzial')" style="display: none;">
+                <h2>Dodaj oddział</h2>
                 <label for="nazwa">Nazwa:</label>
                 <input type="text" id="nazwa" name="nazwa" required>
                 <br>
@@ -212,6 +216,7 @@
             </form>
 
             <form id="formPacjent" onsubmit="submitForm(event, '/api/pacjent')" style="display: none;">
+                <h2>Zarejestruj pacjenta</h2>
                 <label for="imie">Imię:</label>
                 <input type="text" id="imie" name="imie" required>
                 <br>
@@ -249,6 +254,7 @@
             </form>
 
             <form id="formDyzur" onsubmit="submitForm(event, '/api/dyzur')" style="display: none;">
+                <h2> Dodaj dyżur </h2>
                 <label for="data">Data:</label>
                 <input type="date" id="data" name="data" required>
                 <br>
@@ -264,6 +270,7 @@
             </form>
 
             <form id="formDyzurPracownik" onsubmit="submitFormForDyzur(event, '/api/dyzur/dodaj')" style="display: none;">
+                <h2> Dodaj pracownika na dyżur </h2>
                 <label for="oddzial_id">Oddział: </label>
                 <select id="oddzial_id" name="oddzial_id" required>
                     
@@ -277,7 +284,7 @@
                 </select>
                 <br>
 
-                <label for="dyzur_id">Nr dyżuru</label>
+                <label for="dyzur_id">Nr dyżuru:</label>
                 <input type="number" id="dyzur_id" name="dyzur_id" required>
 
                 <br>
@@ -286,6 +293,7 @@
             </form>
 
             <form id="formWizytaRodzaj" onsubmit="submitForm(event, '/api/wizyta/rodzaj')" style="display: none;">
+                <h2>Dodaj rodzaj wizyty</h2>
                 <label for="opis">Opis: </label>
                 <input type="text" id="opis" name="opis" required>
                 <br>
@@ -304,6 +312,7 @@
 
 
             <form id="formWizyta" onsubmit="submitForm(event, '/api/wizyta/nowa')" style="display: none;">
+                <h2>Zapisz nową wizytę</h2>
                 <label for="pacjent_id">ID pacjenta:</label>
                 <input type="number" id="pacjent_id" name="pacjent_id" required>
                 <br>
@@ -334,6 +343,7 @@
 
  
             <form id="findPacjent" onsubmit="getPacjent(event, '/api/pacjent')" style="display: none;">
+                <h2>Znajdź pacjenta</h2>
                 <label for="nazwisko">Nazwisko pacjenta(lub jego fragment):</label>
                 <input type="text" id="nazwisko" name="nazwisko" required>
                 <br>
@@ -344,6 +354,7 @@
 
 
             <form id="findWizytyForLekarz" onsubmit = "getWizyty(event, '/api/wizyta/lekarz')" style="display: none;">
+                <h2>Znajdź wizyty dla lekarza z danego dnia</h2>
                 <label for="data">Data:</label>
                 <input type="date" id="data" name="data" required>
                 <br>
@@ -374,6 +385,7 @@
             </form>
 
             <form id="findStatsForLekarz" onsubmit="findStatsForLekarz(event, '/api/lekarz/stats', 'findStatsForLekarz')" style="display: none;">
+                <h2>Wyszukaj statystyki wizyt lekarzy</h2>
                 <label for="monthYear">Miesiąc: </label>
                 <input type="month" id="monthYear" name="monthYear" required>
                 <br>
@@ -382,6 +394,7 @@
             </form>
 
         <form id="findStatsForOddzial" onsubmit="findStatsForOddzial(event, '/api/oddzial/stats', 'findStatsForOddzial')" style="display: none;">
+            <h2>Znajdź statystyki przychodu oddziałów</h2>
             <select id="oddzial_id" name="oddzial_id" required>
             
             </select>
@@ -390,6 +403,7 @@
         </form>
 
         <form id="changePracownikOnDyzur" onsubmit="putPracownikOnDyzur(event, '/api/dyzur/pracownik', 'changePracownikOnDyzur')" style="display: none;">
+            <h2>Zmień pracownika</h2>
             <label for="oddzial_id">Oddział: </label>
             <select id="oddzial_id" name="oddzial_id" required>
             
@@ -424,6 +438,7 @@
         </form>
 
         <form id="deletePracownikOnDyzur" onsubmit="deletePracownikOnDyzur(event, '/api/dyzur/pracownik', 'deletePracownikOnDyzur')" style="display: none;">
+            <h2>Usuń pracownika z dyżuru</h2>
             <label for="oddzial_id">Oddział: </label>
             <select id="oddzial_id" name="oddzial_id" required>
         
@@ -455,7 +470,7 @@
         </form>
 
         <form id="deleteWizyta" onsubmit="deleteWizyta(event, '/api/wizyta', 'deleteWizyta')" style="display: none;">
-    
+            <h2> Anuluj wizytę </h2>
             <label for="data">Data:</label>
             <input type="date" id="data" name="data" required>
             <br>

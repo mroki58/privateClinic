@@ -115,7 +115,7 @@ VALUES
 ('Neurologia', 2, null, NULL),
 ('Pediatria', 3, null, NULL);
 
-insert into specjalizacja(opis) values ('Kardiochirurgia'), ('Neurologia'), ('Pediatria');
+insert into specjalizacja(opis) values ('Kardiochirurgia dziecięca'), ('Neurologia'), ('Pediatria');
 
 INSERT INTO lekarz_insert_widok (imie, nazwisko, plec, pesel, miejscowosc, ulica, nr_domu, nr_lokalu, pensja, wyksztalcenie, nr_telefonu, oddzial_id, specjalizacja_id)
 VALUES 
